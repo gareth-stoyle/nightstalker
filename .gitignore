@@ -1,6 +1,4 @@
 config.py
-test_db.py
-database.db
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
