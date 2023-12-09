@@ -60,32 +60,6 @@ def get_sleep_data(date, time_range_spans_multi):
     # print(sleep_data)
     return sleep_data
 
-# my device appears to not get skin temp data
-# def get_skin_temp_data(date, time_range_spans_multi):
-#     if time_range_spans_multi:
-#         # request across two dates
-#         # reduce one from date 
-#         date_plus_1 = (datetime.strptime(date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d') 
-#         print('requesting skin temp data for two days:', date, date_plus_1) 
-#         skin_temp_request = requests.get(
-#             f'https://api.fitbit.com/1/user/{config.user_id}/temp/skin/date/{date}/{date_plus_1}.json',
-#             headers={'Authorization': 'Bearer ' + config.access_token}
-#         )
-#     else:
-#         # request across one day
-#         print('requesting skin tmep data for one day:', date)
-#         skin_temp_request = requests.get(
-#             f'https://api.fitbit.com/1/user/{config.user_id}/temp/skin/date/{date}.json',
-#             headers={'Authorization': 'Bearer ' + config.access_token}
-#         )
-        
-#     if skin_temp_request.status_code != 200:
-#         raise RuntimeError('fitbit api returned request status code:', skin_temp_request.status_code)
-
-#     skin_temp_data = skin_temp_request.json()
-#     print(skin_temp_data)
-#     return skin_temp_data
-
 def format_time(entry):
     # Rename dateTime to startTime and convert it to time in hh:mm:ss format
     entry["startTime"] = datetime.strptime(entry.pop("dateTime"), "%Y-%m-%dT%H:%M:%S.%f").strftime("%H:%M:%S")
