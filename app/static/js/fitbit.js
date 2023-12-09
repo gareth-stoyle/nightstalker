@@ -1,106 +1,147 @@
-console.log("If you're seeing this, html and js are working on flask!");
-console.log(hrData);
+/*******************************************
 
-function convertToTime(minutes) {
-    // Calculate hours and minutes from the total minutes
-    var hours = Math.floor(minutes / 60);
-    var remainingMinutes = minutes % 60;
+----------- FITBIT DATA HANDLING -----------
 
-    // Format the hours and minutes as two digits
-    var formattedHours = ('0' + hours).slice(-2);
-    var formattedMinutes = ('0' + remainingMinutes).slice(-2);
+*******************************************/
 
-    // Create and return the time string
-    return formattedHours + ':' + formattedMinutes;
+function getSleepStage(time) {
+    // Iterate through each sleep entry
+    for (var i = 0; i < sleepData.sleep.length; i++) {
+        var levelsData = sleepData.sleep[i].levels.data;
+
+        // Iterate through each data entry within levels
+        for (var j = 0; j < levelsData.length; j++) {
+            var startTime = levelsData[j].startTime;
+            var endTime = levelsData[j].endTime;
+
+            // if time range crosses midnight
+            if (compareTimes(endTime, startTime) < 0) {
+                // console.log('startTime and endTime cross midnight: ' + startTime + endTime);
+                // we just need to confirm that our time is less than endTime
+                if (compareTimes(time, endTime) <= 0) {
+                    return { value: levelsData[j].level };
+                }
+            } else {
+                // Check if the given time falls within the current sleep level
+                if (compareTimes(time, startTime) >= 0 && compareTimes(time, endTime) <= 0) {
+                    return { value: levelsData[j].level };
+                }
+            }
+        }
+    }
+
+    // Return null if no matching sleep stage is found
+    return null;
 }
 
-function convertToMinutes(timeString) {
-    // Split the time string into hours, minutes, and seconds
-    var [hours, minutes, seconds] = timeString.split(':');
+// Function to insert sleep data into HTML
+function setSleepData(time) {
+    // Check if the container already exists
+    var existingSleepDataContainer = document.getElementById('fitbit_sleep_data');
+    
+    // If it exists, remove it
+    if (existingSleepDataContainer) {
+        existingSleepDataContainer.remove();
+    }
 
-    // Convert hours and minutes to total minutes
-    var totalMinutes = parseInt(hours) * 60 + parseInt(minutes);
+    // Create the container div
+    var sleepDataContainer = document.createElement('div');
+    sleepDataContainer.setAttribute('class', 'container');
+    sleepDataContainer.setAttribute('id', 'fitbit_sleep_data');
 
-    return totalMinutes;
+    // Create the h4 element for heart rate
+    var sleepStageElement = document.createElement('h4');
+    sleepStageElement.setAttribute('id', 'sleep_stage');
+    
+    var selectedSleepStage = getSleepStage(time);
+    if (selectedSleepStage) {
+        sleepStageElement.textContent = 'Sleep Stage: ' + selectedSleepStage.value;
+    } else {
+        sleepStageElement.textContent = 'Sleep Stage: Not Found'; // Handle the case when no data is found
+    }
+
+    // Get the container div and append
+    var mainContainer = document.getElementById('container');
+    sleepDataContainer.appendChild(sleepStageElement);
+    mainContainer.appendChild(sleepDataContainer);
 }
 
-//Function to create time slider based on hrData start and end times
-function createTimeSlider() {
-    // Extract the first and last time values
-    var firstTime = hrData[0].time;
-    var lastTime = hrData[hrData.length - 1].time;
-
-    // Assign min and max based on the extracted time values
-    var min = convertToMinutes(firstTime);
-    var max = convertToMinutes(lastTime);
-    var selectedTime = convertToTime(min);
-
-    // Create the input element
-    var inputElement = document.createElement('input');
-    inputElement.setAttribute('id', 'time_slider_input');
-    inputElement.setAttribute('type', 'range');
-    inputElement.setAttribute('class', 'form-range');
-    inputElement.setAttribute('min', min);
-    inputElement.setAttribute('max', max);
-    inputElement.setAttribute('step', 1);
-    inputElement.setAttribute('value', min);
-
-    // Create the paragraph element for selected time
-    var selectedTimeHeader = document.createElement('h4');
-    selectedTimeHeader.setAttribute('id', 'selected_time');
-    selectedTimeHeader.textContent = 'Selected Time: ' + selectedTime;
-
-    // Get the container div (assuming its ID is "time_slider")
-    var timeSliderContainer = document.getElementById('time_slider');
-
-    // Append the elements to the container
-    timeSliderContainer.appendChild(inputElement);
-    timeSliderContainer.appendChild(selectedTimeHeader);
-
-    setHrData(firstTime);
-}
-
-// Function to handle time slider control
-function timeSliderHandler() {
-    // Get the paragraph to display the selected time
-    var selectedTimeHeader = document.getElementById('selected_time');
-
-    // Calculate hours and minutes from the value of the range slider
-    var totalMinutes = parseInt(this.value);
-    var hours = Math.floor(totalMinutes / 60);
-    var minutes = totalMinutes % 60;
-
-    // Format the hours and minutes as two digits
-    var formattedHours = ('0' + hours).slice(-2);
-    var formattedMinutes = ('0' + minutes).slice(-2);
-    var formattedTime = formattedHours + ':' + formattedMinutes + ':00';
-
-    // Update the paragraph with the selected time
-    selectedTimeHeader.textContent = 'Selected Time: ' + formattedHours + ':' + formattedMinutes;
-
-    setHrData(formattedTime);
-    setAccelData(formattedTime)
-}
-
-// Function to insert JSON data into HTML
+// Function to insert hr data into HTML
 function setHrData(time) {
-    // Get the container element
-    var heartRateElement = document.getElementById('heart_rate');
+    // Check if the container already exists
+    var existingHrDataContainer = document.getElementById('fitbit_hr_data');
+    
+    // If it exists, remove it
+    if (existingHrDataContainer) {
+        existingHrDataContainer.remove();
+    }
 
+    // Create the container div
+    var hrDataContainer = document.createElement('div');
+    hrDataContainer.setAttribute('class', 'container');
+    hrDataContainer.setAttribute('id', 'fitbit_hr_data');
+
+    // Create the h4 element for heart rate
+    var heartRateElement = document.createElement('h4');
+    heartRateElement.setAttribute('id', 'heart_rate');
+    
     var selectedHeartRate = hrData.find(entry => entry.time === time);
     if (selectedHeartRate) {
         heartRateElement.textContent = 'Heart Rate: ' + selectedHeartRate.value;
     } else {
         heartRateElement.textContent = 'Heart Rate: Not Found'; // Handle the case when no data is found
     }
+
+    // Get the container div and append
+    var mainContainer = document.getElementById('container');
+    hrDataContainer.appendChild(heartRateElement);
+    mainContainer.appendChild(hrDataContainer);
 }
 
-function setAccelData(time) {
-    console.log('placeholder for accelerometer data')
+// Function to insert hr data into HTML - seemingly not supported on my device
+// function setSkinTempData(time) {
+//     // Check if the container already exists
+//     var existingSkinTempDataContainer = document.getElementById('fitbit_skin_temp_data');
+    
+//     // If it exists, remove it
+//     if (existingSkinTempDataContainer) {
+//         existingSkinTempDataContainer.remove();
+//     }
+
+//     // Create the container div
+//     var skinTempDataContainer = document.createElement('div');
+//     skinTempDataContainer.setAttribute('class', 'container');
+//     skinTempDataContainer.setAttribute('id', 'fitbit_skin_temp_data');
+
+//     // Create the h4 element for heart rate
+//     var skinTempElement = document.createElement('h4');
+//     skinTempElement.setAttribute('id', 'skin_temp');
+    
+//     var selectedSkinTemp = skinTempData.find(entry => entry.time === time);
+//     if (selectedSkinTemp) {
+//         skinTempElement.textContent = 'Skin Temp: ' + selectedSkinTemp.value;
+//     } else {
+//         skinTempElement.textContent = 'Skin Temp: Not Found'; // Handle the case when no data is found
+//     }
+
+//     // Get the container div and append
+//     var mainContainer = document.getElementById('container');
+//     skinTempDataContainer.appendChild(skinTempElement);
+//     mainContainer.appendChild(skinTempDataContainer);
+// }
+
+
+/*******************************************
+
+------------- HELPER FUNCTIONS -------------
+
+*******************************************/
+
+// Helper function to compare two time strings
+function compareTimes(time1, time2) {
+    var parsedTime1 = new Date("2000-01-01T" + time1 + "Z");
+    var parsedTime2 = new Date("2000-01-01T" + time2 + "Z");
+
+    return parsedTime1 - parsedTime2;
 }
-
-
-createTimeSlider();
-var timeSlider = document.getElementById('time_slider_input');
-timeSlider.addEventListener('input', timeSliderHandler);
 
