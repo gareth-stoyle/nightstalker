@@ -6,6 +6,7 @@
 
 console.log("If you're seeing this, html and js are working on flask!");
 console.log(requestedDate);
+console.log(invalidDate);
 console.log(hrData);
 console.log(sleepData);
 console.log(timeRange);
@@ -16,16 +17,13 @@ if (timeRangeSpansMulti) {
 }
 
 var dateInput = document.getElementById('date');
-
-// this should be smarter, should be capable of displaying data aslong as footage is provided
-// failing gracefully on other data points
-dateInput.addEventListener('change', handleDateChange);
-if (hrData.length == 0) {
-    // handle no hrData
-    // console.log('running no data message');
-    noDataMesage();
+if (!videoAvailable) {
+    noVideoMessage();
 } else {
-    // console.log('hr data found');
+    dateInput.addEventListener('change', handleDateChange);
+    if (invalidDate) {
+        handleInvalidDate();
+    }
     createTimeSlider();
     var timeSlider = document.getElementById('time_slider_input');
     timeSlider.addEventListener('input', timeSliderHandler);

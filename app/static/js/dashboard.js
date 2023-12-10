@@ -43,10 +43,9 @@ function createTimeSlider() {
 
     // Append the container to the main time slider container
     mainContainer.appendChild(sliderContainer);
-
+    
     setHrData(timeRange[0]+':00');
     setSleepData(timeRange[0]+':00');
-    // setSkinTempData(firstTime);
 }
 
 // Function to handle time slider control
@@ -61,21 +60,43 @@ function timeSliderHandler() {
     // Update the paragraph with the selected time
     selectedTimeHeader.textContent = 'Selected Time: ' + selectedTime;
 
-    // add 00 for FitBit HR retrieval
-    setHrData(selectedTime+':00');
-    setSleepData(selectedTime+':00');
-    // setSkinTempData(selectedTime+':00');
+    // if there is no data, these divs can stay on Not Found
+    if (hrData.length > 0) {
+        setHrData(selectedTime+':00');
+    }
+
+    if (sleepData.sleep.length > 0) {
+        setSleepData(selectedTime+':00');
+    }
 }
 
 function handleDateChange() {
     // Get the selected date value
     var selectedDate = dateInput.value;
 
+    if (!isValidDate(selectedDate)) {
+        alert('Invalid date input. Please enter a valid date.');
+        return; // Exit the function if the date is invalid
+    }
+
     // Update the URL with the new 'date' parameter
     var newUrl = window.location.href.split('?')[0] + '?date=' + encodeURIComponent(selectedDate);
 
     // Reload the page with the updated URL
     window.location.href = newUrl;
+}
+
+function handleInvalidDate() {
+    // create an error banner if invalidDate
+    var mainContainer = document.getElementById('container');
+
+    // Create a new div element for the error message
+    var errorDiv = document.createElement('div');
+    errorDiv.className = 'error';
+    errorDiv.textContent = "Requested Date Error: Resetting to yesterday's date.";
+
+    // Append the error message to the container
+    mainContainer.appendChild(errorDiv);
 }
 
 /*******************************************
@@ -108,12 +129,17 @@ function convertToMinutes(timeString) {
 }
 
 //Function to notify user that Fitbit data wasn't found
-function noDataMesage() {
+function noVideoMessage() {
     var errorMessage = document.createElement('h1');
     errorMessage.setAttribute('id', 'no_data_message');
-    errorMessage.textContent = 'FitBit Data not found!';
+    errorMessage.textContent = 'Video does not exist!';
 
     // Get the container div and append
     var mainContainer = document.getElementById('container');
     mainContainer.appendChild(errorMessage);
+}
+
+function isValidDate(dateString) {
+    var regex = /^\d{4}-\d{2}-\d{2}$/; // Assuming YYYY-MM-DD format
+    return regex.test(dateString);
 }

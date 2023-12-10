@@ -39,7 +39,7 @@ function setSleepData(time) {
     // Check if the container already exists
     var existingSleepDataContainer = document.getElementById('fitbit_sleep_data');
     
-    // If it exists, remove it
+    // If it exists, then remove existing container
     if (existingSleepDataContainer) {
         existingSleepDataContainer.remove();
     }
@@ -71,7 +71,7 @@ function setHrData(time) {
     // Check if the container already exists
     var existingHrDataContainer = document.getElementById('fitbit_hr_data');
     
-    // If it exists, remove it
+    // If it exists, remove existing container
     if (existingHrDataContainer) {
         existingHrDataContainer.remove();
     }
@@ -97,38 +97,6 @@ function setHrData(time) {
     hrDataContainer.appendChild(heartRateElement);
     mainContainer.appendChild(hrDataContainer);
 }
-
-// Function to insert hr data into HTML - seemingly not supported on my device
-// function setSkinTempData(time) {
-//     // Check if the container already exists
-//     var existingSkinTempDataContainer = document.getElementById('fitbit_skin_temp_data');
-    
-//     // If it exists, remove it
-//     if (existingSkinTempDataContainer) {
-//         existingSkinTempDataContainer.remove();
-//     }
-
-//     // Create the container div
-//     var skinTempDataContainer = document.createElement('div');
-//     skinTempDataContainer.setAttribute('class', 'container');
-//     skinTempDataContainer.setAttribute('id', 'fitbit_skin_temp_data');
-
-//     // Create the h4 element for heart rate
-//     var skinTempElement = document.createElement('h4');
-//     skinTempElement.setAttribute('id', 'skin_temp');
-    
-//     var selectedSkinTemp = skinTempData.find(entry => entry.time === time);
-//     if (selectedSkinTemp) {
-//         skinTempElement.textContent = 'Skin Temp: ' + selectedSkinTemp.value;
-//     } else {
-//         skinTempElement.textContent = 'Skin Temp: Not Found'; // Handle the case when no data is found
-//     }
-
-//     // Get the container div and append
-//     var mainContainer = document.getElementById('container');
-//     skinTempDataContainer.appendChild(skinTempElement);
-//     mainContainer.appendChild(skinTempDataContainer);
-// }
 
 
 /*******************************************
