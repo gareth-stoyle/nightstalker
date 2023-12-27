@@ -1,11 +1,15 @@
-.PHONY: test run start
+.PHONY: test record server dashboard
 
 test:
 	@echo "Running unit tests..."
-	cd app && python -m unittest discover tests -v
+	python -m unittest discover -v .
 
-run:
+record:
+	@echo "Recording sleep..."
+	python src/record.py
+
+server:
 	@echo "Starting Flask server..."
-	python app/app.py
+	cd app && python app.py
 
-start: test run
+dashboard: test server

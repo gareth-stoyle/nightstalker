@@ -1,7 +1,14 @@
+import sys
+import os
+
+# to allow for importing of files from ../src
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_path = os.path.join(current_dir, '../src')
+sys.path.append(src_path)
+
+import fitbit
 from flask import Flask, render_template, request
 from datetime import datetime, timedelta
-import fitbit
-
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])

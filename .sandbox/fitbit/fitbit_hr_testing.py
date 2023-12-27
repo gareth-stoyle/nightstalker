@@ -1,7 +1,7 @@
 import requests
 from pprint import pprint
 import oauth2 as oauth2
-import app.config as config
+import src.config as config
 
 
 hr_request = requests.get('https://api.fitbit.com/1/user/'+config.user_id+'/activities/heart/date/2023-11-04/1d/1min.json',

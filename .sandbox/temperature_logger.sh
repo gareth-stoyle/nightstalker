@@ -1,6 +1,9 @@
 #!/bin/bash
 
-log_file="temperature_log.txt"
+
+mkdir -p logs
+
+log_file="logs/$(date +"%Y-%m-%d")-temperature_log.txt"
 
 while true; do
     temperature=$(vcgencmd measure_temp | cut -d "=" -f2)
@@ -15,6 +18,6 @@ while true; do
     echo "$log_entry" >> "$log_file"
     echo "System information logged."
 
-    # Log temperature every 5 minutes
+    # Log temperature every 2 minutes
     sleep 120
 done

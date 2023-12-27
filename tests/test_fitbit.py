@@ -1,6 +1,5 @@
 import unittest
-from fitbit import *
-
+from src.fitbit import *
 # Left out API call related unittests, 
 # found those easier to test as written.
 
