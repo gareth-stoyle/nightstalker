@@ -9,6 +9,8 @@ from datetime import datetime, timedelta, date
 
 def is_valid_date(requested_date):
     """Checks if a given input is a valid date & within an acceptable range"""
+    if type(requested_date) != str:
+        return False
     try:
         parsed_date = datetime.strptime(requested_date, '%Y-%m-%d').date()
 
