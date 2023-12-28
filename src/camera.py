@@ -7,7 +7,7 @@ class Camera:
         self.camera.resolution = resolution
         
     def start_recording(self, path, video_file):
-        output = path + video_file
+        output = path + '/' + video_file
         self.camera.start_recording(output)
 
     def stop_recording(self):

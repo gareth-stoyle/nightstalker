@@ -3,7 +3,7 @@ import datetime
 import os
 
 current_directory = os.getcwd()
-path = os.path.abspath(os.path.join(current_directory, '..', 'videos'))
+path = os.path.abspath(os.path.join(current_directory, 'outputs'))
 
 current_date = datetime.datetime.now().strftime("%Y%m%d")
 video_file = f"{current_date}_footage.h264"
@@ -26,4 +26,4 @@ finally:
     print('Ending recording sessions...')
     camera.stop_recording()
 
-print(f'Recording successfully captured in {path}{video_file}')
+print(f'Recording successfully captured in {path}/{video_file}')

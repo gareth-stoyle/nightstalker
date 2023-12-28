@@ -1,8 +1,7 @@
 logs
 config.py
 *.h264
-record_log.txt
-server_log.txt
+outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
