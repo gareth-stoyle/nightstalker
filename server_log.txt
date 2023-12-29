@@ -1,0 +1,59 @@
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 453-245-417
+127.0.0.1 - - [29/Dec/2023 19:42:31] "[33mGET /display HTTP/1.1[0m" 404 -
+127.0.0.1 - - [29/Dec/2023 19:42:35] "[33mGET /display/ HTTP/1.1[0m" 404 -
+127.0.0.1 - - [29/Dec/2023 19:43:09] "GET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1" 200 -
+127.0.0.1 - - [29/Dec/2023 19:43:29] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:43:32] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:43:32] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:10] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:10] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:16] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:18] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:18] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:18] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:19] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:19] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:19] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:19] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:20] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:20] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:20] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:20] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:20] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:21] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:21] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:21] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:21] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:44:21] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:25] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:25] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:26] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:26] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:27] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:27] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:27] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:28] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:28] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:28] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:29] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:29] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:30] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:30] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:30] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:31] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:31] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:32] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:32] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:32] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:33] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:33] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:34] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:34] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -
+127.0.0.1 - - [29/Dec/2023 19:53:34] "[35m[1mGET /static/videos/fixed-fps-20231229_footage.mp4 HTTP/1.1[0m" 206 -

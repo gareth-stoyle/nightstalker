@@ -1,7 +1,12 @@
 import picamera
 
+##################################
+##### PICAMERA FUNCTIONALITY #####
+##################################
+
 class Camera:
-    def __init__(self, framerate=30, resolution='720x480'):
+    """Simple class to initialise the camera with user submitted settings"""
+    def __init__(self, framerate=24, resolution='720x480'):
         self.camera = picamera.PiCamera()
         self.camera.framerate = framerate
         self.camera.resolution = resolution

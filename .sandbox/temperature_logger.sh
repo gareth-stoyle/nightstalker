@@ -1,9 +1,6 @@
 #!/bin/bash
 
-
-mkdir -p logs
-
-log_file="logs/$(date +"%Y-%m-%d")-temperature_log.txt"
+log_file="$(date +"%Y-%m-%d")-temperature_log.txt"
 
 while true; do
     temperature=$(vcgencmd measure_temp | cut -d "=" -f2)
