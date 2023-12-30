@@ -68,6 +68,18 @@ function setSleepData(time) {
 
 // Function to insert hr data into HTML
 function setHrData(time) {
+    // Split the time string into hours, minutes, and seconds
+    var [hours, minutes, seconds] = time.split(':');
+
+    // Check if seconds is 30 or greater
+    if (parseInt(seconds) >= 30) {
+        // Increment minutes by one and set seconds to 00
+        minutes = ('0' + (parseInt(minutes) + 1)).slice(-2);
+    }
+    
+    // Reset seconds to 00
+    var modifiedTime = [hours, minutes, '00'].join(':');
+
     // Check if the container already exists
     var existingHrDataContainer = document.getElementById('fitbit_hr_data');
     
@@ -85,7 +97,7 @@ function setHrData(time) {
     var heartRateElement = document.createElement('h4');
     heartRateElement.setAttribute('id', 'heart_rate');
     
-    var selectedHeartRate = hrData.find(entry => entry.time === time);
+    var selectedHeartRate = hrData.find(entry => entry.time === modifiedTime);
     if (selectedHeartRate) {
         heartRateElement.textContent = 'Heart Rate: ' + selectedHeartRate.value;
     } else {

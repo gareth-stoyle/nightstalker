@@ -34,10 +34,10 @@ def time_range_spans_multidays(time_range):
         raise ValueError("Invalid time range format. Expected a list with two elements.")
 
     try:
-        start_time = datetime.strptime(time_range[0], '%H:%M')
-        end_time = datetime.strptime(time_range[1], '%H:%M')
+        start_time = datetime.strptime(time_range[0], '%H:%M:%S')
+        end_time = datetime.strptime(time_range[1], '%H:%M:%S')
     except ValueError as e:
-        raise ValueError("Invalid time format. Please use the format '%H:%M'.") from e
+        raise ValueError("Invalid time format. Please use the format '%H:%M:%S'.") from e
 
     return start_time > end_time
 
@@ -75,7 +75,7 @@ def format_time(entry):
 ### FitBit API FUNCTIONS ###
 ############################
 
-def get_hr_data(date, time_range_spans_multi, time_range=['00:00', '23:59']):
+def get_hr_data(date, time_range_spans_multi, time_range=['00:00:00', '23:59:59']):
     """Retrieve heart rate data from Fitbit API for a given date and time range."""
 
     if time_range_spans_multi:

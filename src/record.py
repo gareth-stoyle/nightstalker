@@ -8,7 +8,7 @@ import time
 # get file and path details
 #
 
-current_date = datetime.datetime.now().strftime("%Y%m%d")
+current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 current_directory = os.getcwd()
 path = os.path.abspath(os.path.join(current_directory, 'app', 'static', 'videos'))
 video_file = f"{current_date}_footage.h264"

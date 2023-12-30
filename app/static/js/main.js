@@ -10,6 +10,8 @@ console.log(invalidDate);
 console.log(hrData);
 console.log(sleepData);
 console.log(timeRange);
+console.log(videoFile);
+
 if (timeRangeSpansMulti) {
     console.log('Time range spans multiple days');
 } else {
@@ -17,7 +19,7 @@ if (timeRangeSpansMulti) {
 }
 
 var dateInput = document.getElementById('date');
-if (!videoAvailable) {
+if (!videoFile) {
     noVideoMessage();
 } else {
     dateInput.addEventListener('change', handleDateChange);

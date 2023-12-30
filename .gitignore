@@ -3,6 +3,7 @@ config.py
 *.mp4
 server_log.txt
 record_log.txt
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

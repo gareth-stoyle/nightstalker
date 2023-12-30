@@ -20,10 +20,10 @@ class TestFitbit(unittest.TestCase):
         self.assertFalse(is_valid_date('2023-23-10'))
 
     def test_time_range_spans_multidays(self):
-        self.assertTrue(time_range_spans_multidays(['23:05', '08:04']))
-        self.assertTrue(time_range_spans_multidays(['16:00', '00:00']))
-        self.assertFalse(time_range_spans_multidays(['01:01', '08:04']))
-        self.assertFalse(time_range_spans_multidays(['00:00', '23:59']))
+        self.assertTrue(time_range_spans_multidays(['23:05:12', '08:04:00']))
+        self.assertTrue(time_range_spans_multidays(['16:00:00', '00:00:00']))
+        self.assertFalse(time_range_spans_multidays(['01:01:01', '08:04:59']))
+        self.assertFalse(time_range_spans_multidays(['00:00:49', '23:59:01']))
 
 
 

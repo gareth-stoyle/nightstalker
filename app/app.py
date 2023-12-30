@@ -1,14 +1,14 @@
 import sys
 import os
-
+from flask import Flask, render_template, request, redirect, url_for
+from datetime import datetime, timedelta
 # to allow for importing of files from ../src
 current_dir = os.path.dirname(os.path.abspath(__file__))
 src_path = os.path.join(current_dir, '../src')
 sys.path.append(src_path)
-
 import fitbit
-from flask import Flask, render_template, request, redirect, url_for
-from datetime import datetime, timedelta
+import video_processing
+
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -16,8 +16,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 @app.route('/', methods=['GET'])
 def dashboard():
     invalid_date = False
-    video_available = False
-    time_range = ['23:25','08:04']
+    time_range = ['23:25:00','03:25:42']
     time_range_spans_multi = fitbit.time_range_spans_multidays(time_range)
     requested_date = request.args.get('date')
 
@@ -28,6 +27,7 @@ def dashboard():
         invalid_date = True
         requested_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
 
+    video_file = video_processing.find_video(requested_date)
     hr_data = fitbit.get_hr_data(requested_date, time_range_spans_multi, time_range)
     sleep_data = fitbit.get_sleep_data(requested_date, time_range_spans_multi)
     
@@ -38,12 +38,12 @@ def dashboard():
                            invalid_date=invalid_date,
                            time_range=time_range,
                            time_range_spans_multi=time_range_spans_multi,
-                           video_available=video_available)
+                           video_file=video_file)
 
-@app.route('/video')
-def video():
-	filename = 'fixed-fps-20231229_footage.mp4'
-	return render_template('video.html', filename=filename)
+# @app.route('/video')
+# def video():
+# 	filename = '2023-11-17_footage.mp4'
+# 	return render_template('video.html', filename=filename)
 	
 @app.route('/display/<filename>')
 def display_video(filename):
