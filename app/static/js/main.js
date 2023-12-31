@@ -19,13 +19,14 @@ if (timeRangeSpansMulti) {
 }
 
 var dateInput = document.getElementById('date');
-if (!videoFile) {
-    noVideoMessage();
-} else {
-    dateInput.addEventListener('change', handleDateChange);
+dateInput.addEventListener('change', handleDateChange);
     if (invalidDate) {
         handleInvalidDate();
     }
+    
+if (!videoFile) {
+    noVideoMessage();
+} else {
     createTimeSlider();
     var timeSlider = document.getElementById('time_slider_input');
     timeSlider.addEventListener('input', timeSliderHandler);

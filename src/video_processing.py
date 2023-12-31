@@ -38,7 +38,7 @@ import os
 def find_video(date):
     '''return the full path to a video given the path and date'''
     current_directory = os.getcwd()
-    path = os.path.abspath(os.path.join(current_directory, 'static', 'videos'))
+    path = os.path.abspath(os.path.join(current_directory, 'app', 'static', 'videos'))
     video_file = f"{date}_footage.mp4"
     full_video_path = os.path.join(path, video_file)
     if os.path.exists(full_video_path):

@@ -9,9 +9,7 @@ sys.path.append(src_path)
 import fitbit
 import video_processing
 
-
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 @app.route('/', methods=['GET'])
 def dashboard():
@@ -26,8 +24,8 @@ def dashboard():
     if not fitbit.is_valid_date(requested_date):
         invalid_date = True
         requested_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
-
     video_file = video_processing.find_video(requested_date)
+    print(video_file)
     hr_data = fitbit.get_hr_data(requested_date, time_range_spans_multi, time_range)
     sleep_data = fitbit.get_sleep_data(requested_date, time_range_spans_multi)
     
@@ -40,10 +38,6 @@ def dashboard():
                            time_range_spans_multi=time_range_spans_multi,
                            video_file=video_file)
 
-# @app.route('/video')
-# def video():
-# 	filename = '2023-11-17_footage.mp4'
-# 	return render_template('video.html', filename=filename)
 	
 @app.route('/display/<filename>')
 def display_video(filename):
