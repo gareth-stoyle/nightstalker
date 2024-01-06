@@ -3,15 +3,14 @@ import os
 
 def convert_h264_to_mp4(path, video_file, framerate='25'):
     '''convert a h264 file to mp4 using MP4Box'''
-    print('### Converting file to mp4 ###')
+    print('\n### Converting file to mp4 ###\n')
     h264_path = path + '/' + video_file
     # Extract the file name (without extension) from the input path
     video_basename = os.path.splitext(os.path.basename(h264_path))[0]
     
     # Create the output file path with the .mp4 extension
     mp4_path = os.path.join(path, f"{video_basename}.mp4")
-    command = ["MP4Box", "-add", h264_path, "-fps", framerate, mp4_path]
-    print(command)
+    command = ["MP4Box", "-add", h264_path, "-fps", str(framerate), mp4_path]
     try:
         subprocess.run(command, check=True)
         print("Conversion successful")

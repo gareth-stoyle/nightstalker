@@ -1,7 +1,8 @@
 import cv2
 import time
 
-video = cv2.VideoCapture("paranormal.mp4")
+# run from video dir
+video = cv2.VideoCapture("sleep_test1.mp4")
 background = None
 motion_frame_numbers = []
 
@@ -43,7 +44,7 @@ while status:
     if motion_detected:
         motion_frame_numbers.append(frame_number)
 
-    cv2.imshow("All contours", frame)
+    cv2.imshow("All contours", frame) # this won't work ssh'd into a pi
     key = cv2.waitKey(1) & 0xFF
     # if the `q` key is pressed, break from the lop
     if key == ord("q"):

@@ -20,7 +20,8 @@ avg = None
 lastUploaded = datetime.datetime.now()
 motionCounter = 0
 
-video = cv2.VideoCapture("paranormal.mp4")
+# run from video dir
+video = cv2.VideoCapture("sleep_test1.mp4")
 status = True
 
 while True:
@@ -96,7 +97,7 @@ while True:
 	# check to see if the frames should be displayed to screen
 	if show_video:
 		# display the security feed
-		cv2.imshow("Feed", frame)
+		# cv2.imshow("Feed", frame) # this won't work when ssh'd into pi
 		# time.sleep(0.08)
 		key = cv2.waitKey(1) & 0xFF
 		# if the `q` key is pressed, break from the lop

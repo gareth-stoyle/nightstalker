@@ -20,7 +20,7 @@ full_video_path = path + '/' + video_file
 
 framerate = 10
 resolution = '720x480'
-camera = camera.Camera(framerate, resolution)
+camera = camera.Camera(framerate, resolution, flip=True)
 camera.start_recording(path, video_file)
 
 print(f"Recording video to {video_file} in the path: {path}. Press 'q' and Enter to stop.")
@@ -40,17 +40,9 @@ finally:
     print('Ending recording sessions...')
     camera.stop_recording()
     time.sleep(0.1) # just in case there is a delay in finishing file writing
-
-print(f'Recording successfully captured in {path}/{video_file}')
-
-#
-# h264 to mp4 conversion
-#
-
-video_processing.convert_h264_to_mp4(path, video_file, framerate)
-
-#
-# Delete h264
-#
-
-video_processing.delete_file(full_video_path)
+    # h264 to mp4 conversion
+    conversion = video_processing.convert_h264_to_mp4(path, video_file, framerate)
+    # Delete h264
+    if conversion:
+        video_processing.delete_file(full_video_path)
+    print(f'Recording successfully captured in {path}')
