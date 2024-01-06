@@ -34,7 +34,7 @@ while status:
     motion_detected = False
 
     for contour in cnts:
-        if cv2.contourArea(contour) < 10000:
+        if cv2.contourArea(contour) < 1000:
             continue
         (x, y, w, h) = cv2.boundingRect(contour)
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
@@ -44,12 +44,16 @@ while status:
         motion_frame_numbers.append(frame_number)
 
     cv2.imshow("All contours", frame)
+    key = cv2.waitKey(1) & 0xFF
+    # if the `q` key is pressed, break from the lop
+    if key == ord("q"):
+        break
     # time.sleep(0.08)
     frame_number += 1
     # print(frame_number)
 
 
-video.release()
-cv2.destroyAllWindows()
+# video.release()
+# cv2.destroyAllWindows()
 
 print("Frames with motion detected:", motion_frame_numbers)
