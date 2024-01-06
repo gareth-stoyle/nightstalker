@@ -4,11 +4,11 @@
 import datetime
 # import imutils
 import cv2
-# import time
+import time
 
 # conf 
 delta_thresh = 5
-min_area = 10000000
+min_area = 1000
 min_motion_frames = 8
 min_upload_seconds = 3.0
 show_video = True
@@ -97,8 +97,8 @@ while True:
 	# check to see if the frames should be displayed to screen
 	if show_video:
 		# display the security feed
-		# cv2.imshow("Feed", frame) # this won't work when ssh'd into pi
-		# time.sleep(0.08)
+		cv2.imshow("Feed", frame) # this won't work when ssh'd into pi
+		time.sleep(0.08)
 		key = cv2.waitKey(1) & 0xFF
 		# if the `q` key is pressed, break from the lop
 		if key == ord("q"):

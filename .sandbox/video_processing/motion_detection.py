@@ -49,7 +49,7 @@ while status:
     # if the `q` key is pressed, break from the lop
     if key == ord("q"):
         break
-    # time.sleep(0.08)
+    time.sleep(0.08)
     frame_number += 1
     # print(frame_number)
 
