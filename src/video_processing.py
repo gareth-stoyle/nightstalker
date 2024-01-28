@@ -1,5 +1,6 @@
 import subprocess
 import os
+import cv2
 
 def convert_h264_to_mp4(path, video_file, framerate='25'):
     '''convert a h264 file to mp4 using MP4Box'''
@@ -47,6 +48,24 @@ def find_video(date):
         print(f"The video file '{video_file}' does not exist.")
         return None
 
+def count_frames(video_path):
+    # Open the video file
+    video = cv2.VideoCapture(video_path)
+
+    # Check if the video file is opened successfully
+    if not video.isOpened():
+        print("Error: Could not open video file")
+        return
+
+    # Get the total number of frames in the video
+    total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+    total_fps = int(video.get(cv2.CAP_PROP_FPS))
+
+    # Release the video capture object
+    video.release()
+
+    return (total_frames, total_fps)
+
 def set_video_info(video_file, start, end, length, fps, resolution):
     '''set video metadata such as start and end time in JSON DB'''
     pass
@@ -54,3 +73,7 @@ def set_video_info(video_file, start, end, length, fps, resolution):
 def retrieve_video_info(video_file):
     '''return video metadata such as start and end time from JSON DB'''
     pass
+
+print(count_frames('app/static/videos/2024-01-28_footage.mp4'))
+print(count_frames('app/static/videos/2024-01-28_footage.h264'))
+

@@ -42,7 +42,7 @@ finally:
     time.sleep(0.1) # just in case there is a delay in finishing file writing
     # h264 to mp4 conversion
     conversion = video_processing.convert_h264_to_mp4(path, video_file, framerate)
-    # Delete h264
-    if conversion:
-        video_processing.delete_file(full_video_path)
+    # Delete h264 - don't do this step while developing.
+    # if conversion:
+    #     video_processing.delete_file(full_video_path)
     print(f'Recording successfully captured in {path}')
