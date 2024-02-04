@@ -74,6 +74,4 @@ def retrieve_video_info(video_file):
     '''return video metadata such as start and end time from JSON DB'''
     pass
 
-print(count_frames('app/static/videos/2024-01-28_footage.mp4'))
-print(count_frames('app/static/videos/2024-01-28_footage.h264'))
 
