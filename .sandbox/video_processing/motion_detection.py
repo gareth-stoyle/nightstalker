@@ -2,7 +2,7 @@ import cv2
 import time
 
 # run from video dir
-video = cv2.VideoCapture("2024-01-21_footage.mp4")
+video = cv2.VideoCapture("2024-02-04_footage.mp4")
 background = None
 motion_frame_numbers = []
 

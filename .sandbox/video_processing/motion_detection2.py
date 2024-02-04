@@ -19,14 +19,16 @@ client = None
 avg = None
 lastUploaded = datetime.datetime.now()
 motionCounter = 0
+frame_number = -1
+motion_frame_numbers = []
 
 # run from video dir
-video = cv2.VideoCapture("2024-01-21_footage.mp4")
+video = cv2.VideoCapture("2024-02-04_footage.mp4")
 status = True
 
 while True:
 	status, frame = video.read()
-	
+	frame_number += 1
 	if not status:
 		break
 	
@@ -67,6 +69,7 @@ while True:
 		(x, y, w, h) = cv2.boundingRect(c)
 		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 3)
 		text = "Occupied"
+	
 		
 		
 	# draw the text and timestamp on the frame
@@ -78,6 +81,7 @@ while True:
 
 	# check to see if the room is occupied
 	if text == "Occupied":
+		motion_frame_numbers.append(frame_number)
 		# check to see if enough time has passed between uploads
 		if (timestamp - lastUploaded).seconds >= min_upload_seconds:
 			# increment the motion counter
@@ -98,10 +102,12 @@ while True:
 	if show_video:
 		# display the security feed
 		cv2.imshow("Feed", frame) # this won't work when ssh'd into pi
-		time.sleep(0.08)
+		time.sleep(0.07)
 		key = cv2.waitKey(1) & 0xFF
 		# if the `q` key is pressed, break from the lop
 		if key == ord("q"):
 			break
 	# clear the stream in preparation for the next frame
 	# rawCapture.truncate(0)
+
+print("Frames with motion detected:", motion_frame_numbers)
