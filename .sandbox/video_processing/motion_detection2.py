@@ -73,6 +73,7 @@ min_clip_gap = 8 # 60s of no motion is enough to end clip and reset things
 frame_number = -1
 motion_frame_numbers = []
 writing_clip = False
+clip_count = 0
 
 # run from video dir
 video = cv2.VideoCapture("2024-02-04_footage.mp4")
@@ -91,27 +92,31 @@ while True:
 	if detected:
 		motion_length += 1 # increment frames with motion
 		no_motion = 0 # reset frames with no motion
-		if motion_length >= min_motion_frames: # we should be recording clip
-			print('motion exceed min_motion_frames, writing')
+		# we should be recording clip
+		if not writing_clip and motion_length >= min_motion_frames:
+			clip_count += 1
+			print('motion exceed min_motion_frames and not yet writing, starting writing process')
 			writing_clip = True
-			# set writing_clip true
+			# Define the codec
+			fourcc = cv2.VideoWriter_fourcc(*'mp4v')			
+			output_video = cv2.VideoWriter(f'output_video_{clip_count}.mp4', fourcc, 8, (720, 480))
 			# write frames to video as well as previous x frames
+			output_video.write(frame)  # Write the frame to the output video
 		motion_frame_numbers.append(frame_number)
-
 	else:
 		motion_length = 0 # reset frames with motion
 		no_motion += 1 # increment frames of no motion
-		if writing_clip:
-			if no_motion >= min_clip_gap: # no motion for over 60s, end clip (and shave 30s worth of frames)
-				print('we are writing but no_motion exceeds the min gap between clips, stop writing')
-				writing_clip = False
-			else: # continue writing
-				print("we are writing and haven't met the threshold to stop writing")
+		if writing_clip and no_motion >= min_clip_gap: # no motion for over 60s, end clip (and shave 30s worth of frames)
+			print('we are writing but no_motion exceeds the min gap between clips, stop writing')
+			output_video.release() # stop writing
+			writing_clip = False
+		elif writing_clip: # continue writing
+			print("we are writing and haven't met the threshold to stop writing")
 		else:
 			print('no motion detected and we are not writing, continue')
-		# do nothing if not writing clip
-			
-	time.sleep(2)
+
+
+	time.sleep(1)
 	print(f'motion length: {motion_length}')
 	print(f'writing clip: {writing_clip}')
 	print(f'no motion detected for: {no_motion} frames')
