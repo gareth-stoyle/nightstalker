@@ -4,6 +4,7 @@
 import cv2
 from moviepy.video.io.VideoFileClip import VideoFileClip
 import time
+import os
 
 def detect_motion(frame, min_area, delta_thresh, show_video, avg):
 	detected = False
@@ -73,6 +74,7 @@ def trim_video(input_video, output_video, duration_to_trim):
     
     # Close the video clip
     clip.close()
+    os.remove(input_video) # use video_processing file deletion when ready.
 
 
 # motion detection config
