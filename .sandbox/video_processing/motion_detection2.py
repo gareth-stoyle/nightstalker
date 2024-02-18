@@ -88,7 +88,6 @@ no_motion = 0
 min_motion_frames = 4
 min_clip_gap = 8*60 # 60s of no motion is enough to end clip and reset things
 frame_number = -1
-motion_frame_numbers = []
 writing_clip = False
 clip_count = 0
 
@@ -109,12 +108,19 @@ status = True
 while True:
 	status, frame = video.read()
 	frame_number += 1
+
 	if frame_number <= (fps*(60*10)):
 		continue # skip first 10 mins...
 	if frame_number >= total_frames - (fps*(60*10)):
-		break # step when 10 mins left
-	print(f'\n\n ### process frame {frame_number} ###\n')
-	if not status: # no more frames to parse
+		if writing_clip:
+			writing_clip = False
+			output_video.release()
+		break # stop when 10 mins left
+	
+	if not status: # no more frames to parse, end writing and break
+		if writing_clip:
+			writing_clip = False
+			output_video.release()
 		break
 	
 	detected, avg = detect_motion(frame, min_area, delta_thresh, show_video, avg)		
@@ -126,35 +132,20 @@ while True:
 		# we should be recording clip
 		if not writing_clip and motion_length >= min_motion_frames:
 			clip_count += 1
-			print('motion exceed min_motion_frames and not yet writing, starting writing process')
 			writing_clip = True			
 			output_video = cv2.VideoWriter(f'full_night_output_video_{clip_count}-untrimmed.mp4', fourcc, fps, (frame_width, frame_height))
 			# write frames to video as well as previous x frames
 		elif writing_clip:
 			output_video.write(frame)  # Write the frame to the output video
-		motion_frame_numbers.append(frame_number)
 	else:
 		motion_length = 0 # reset frames with motion
 		no_motion += 1 # increment frames of no motion
 		if writing_clip and no_motion >= min_clip_gap: # no motion for over 60s, end clip (and shave 30s worth of frames)
-			print('we are writing but no_motion exceeds the min gap between clips, stop writing')
 			output_video.release() # stop writing
 			# trim end of clip
 			seconds_to_shave = (min_clip_gap * 0.75) // 8  # get rid of 75% of those last no motion frames
-			print(f'shaving {seconds_to_shave} off video.')
 			trim_video(f'full_night_output_video_{clip_count}-untrimmed.mp4', f'full_night_output_video_{clip_count}.mp4', seconds_to_shave)
 			print('video trimmed.')
 			writing_clip = False
 		elif writing_clip: # continue writing
-			print("we are writing and haven't met the threshold to stop writing")
 			output_video.write(frame)  # Write the frame to the output video
-		else:
-			print('no motion detected and we are not writing, continue')
-
-
-	print(f'motion length: {motion_length}')
-	print(f'writing clip: {writing_clip}')
-	print(f'no motion detected for: {no_motion} frames')
-		
-
-print("Frames with motion detected:", motion_frame_numbers)
