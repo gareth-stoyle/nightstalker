@@ -1,5 +1,7 @@
 import camera
 import video_processing
+import motion_algorithm
+
 import datetime
 import os
 import time
@@ -13,12 +15,13 @@ current_directory = os.getcwd()
 path = os.path.abspath(os.path.join(current_directory, 'app', 'static', 'videos'))
 video_file = f"{current_date}_footage.h264"
 full_video_path = path + '/' + video_file
+clips_output_path = path + '/processed' + video_file
 
 #
 # Setup Camera
 #
 
-framerate = 10
+framerate = 8
 resolution = '720x480'
 camera = camera.Camera(framerate, resolution, flip=True)
 camera.start_recording(path, video_file)
@@ -41,8 +44,12 @@ finally:
     camera.stop_recording()
     time.sleep(0.1) # just in case there is a delay in finishing file writing
     # h264 to mp4 conversion
-    conversion = video_processing.convert_h264_to_mp4(path, video_file, framerate)
+    conversion_status, mp4_path = video_processing.convert_h264_to_mp4(path, video_file, framerate)
     # Delete h264 - don't do this step while developing.
     # if conversion:
     #     video_processing.delete_file(full_video_path)
-    print(f'Recording successfully captured in {path}')
+    print(f'Recording successfully captured in {mp4_path}')
+    print('Merging motion detected clips')
+    motion_algorithm.trim_video_by_motion(mp4_path, clips_output_path)
+    print(f"Clips successfully merged to {clips_output_path}")    
+

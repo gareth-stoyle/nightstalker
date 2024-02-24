@@ -1,6 +1,21 @@
+from moviepy.editor import VideoFileClip
 import subprocess
 import os
-import cv2
+
+def trim_video(input_video, output_video, duration_to_trim):
+    '''Cuts a predefined duration off of a video'''
+    # Load the video clip
+    clip = VideoFileClip(input_video)
+    # Calculate the duration to keep
+    duration_to_keep = clip.duration - duration_to_trim
+    # Trim the video
+    trimmed_clip = clip.subclip(0, duration_to_keep)
+    # Write the trimmed video to a file
+    trimmed_clip.write_videofile(output_video, codec="libx264")
+    
+    # Close the video clip
+    clip.close()
+    delete_file(input_video) # use video_processing file deletion when ready.
 
 def convert_h264_to_mp4(path, video_file, framerate='25'):
     '''convert a h264 file to mp4 using MP4Box'''
@@ -15,25 +30,21 @@ def convert_h264_to_mp4(path, video_file, framerate='25'):
     try:
         subprocess.run(command, check=True)
         print("Conversion successful")
-        return True
+        return [True, mp4_path]
     except Exception as e:
         print("Error during conversion:", e)
-        return False
+        return [False, mp4_path]
 
 def delete_file(file_path):
     '''Delete a file given entire path'''
-    print('Deleting h264 file.')
     try:
         os.remove(file_path)
-        print(f"File deleted successfully: {file_path}")
     except FileNotFoundError:
         print(f"Error: File not found - {file_path}")
     except PermissionError:
         print(f"Error: Permission denied - {file_path}")
     except Exception as e:
         print(f"Error: {e}")
-
-import os
 
 def find_video(date):
     '''return the full path to a video given the path and date'''
@@ -47,31 +58,3 @@ def find_video(date):
     else:
         print(f"The video file '{video_file}' does not exist.")
         return None
-
-def count_frames(video_path):
-    # Open the video file
-    video = cv2.VideoCapture(video_path)
-
-    # Check if the video file is opened successfully
-    if not video.isOpened():
-        print("Error: Could not open video file")
-        return
-
-    # Get the total number of frames in the video
-    total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-    total_fps = int(video.get(cv2.CAP_PROP_FPS))
-
-    # Release the video capture object
-    video.release()
-
-    return (total_frames, total_fps)
-
-def set_video_info(video_file, start, end, length, fps, resolution):
-    '''set video metadata such as start and end time in JSON DB'''
-    pass
-
-def retrieve_video_info(video_file):
-    '''return video metadata such as start and end time from JSON DB'''
-    pass
-
-

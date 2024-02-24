@@ -3,13 +3,13 @@
 # import the necessary packages
 import cv2
 from moviepy.video.io.VideoFileClip import VideoFileClip
+from progressbar import progressbar
 import time
 import os
 
 def detect_motion(frame, min_area, delta_thresh, show_video, avg):
 	detected = False
 	# convert frame to grayscale, and blur it
-	# frame = imutils.resize(frame, width=500)
 	gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 	gray = cv2.GaussianBlur(gray, (21, 21), 0)
 	# if the average frame is None, initialize it
@@ -76,76 +76,71 @@ def trim_video(input_video, output_video, duration_to_trim):
     clip.close()
     os.remove(input_video) # use video_processing file deletion when ready.
 
+def trim_video_by_motion(video_path):
+	# motion detection config
+	delta_thresh = 5
+	min_area = 4000
+	show_video = False
+	avg = None
 
-# motion detection config
-delta_thresh = 5
-min_area = 1000
-show_video = False
-avg = None
-# clip saving algo config
-motion_length = 0
-no_motion = 0
-min_motion_frames = 4
-min_clip_gap = 8*60 # 60s of no motion is enough to end clip and reset things
-frame_number = -1
-writing_clip = False
-clip_count = 0
+	# clip saving algo config
+	motion_length = 0
+	no_motion = 0
+	min_motion_frames = 8
+	min_clip_gap = 8*60 # 60s of no motion is enough to end clip and reset things
+	writing_clip = False
+	clip_count = 0
 
+	# run from video dir
+	video = cv2.VideoCapture(video_path)
 
-# run from video dir
-video = cv2.VideoCapture("full-2024-01-21_footage.mp4")
+	# make from here down a function
+	# Define the codec
+	fourcc = cv2.VideoWriter_fourcc(*'avc1')
+	# get video details
+	fps = video.get(cv2.CAP_PROP_FPS)
+	total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
+	frames_for_iteration = int(total_frames - (fps*(60*10))) # skip last 10 mins for footage
+	frame_width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+	frame_height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+	start = time.time()
 
-# make from here down a function
-# Define the codec
-fourcc = cv2.VideoWriter_fourcc(*'avc1')
-# get video details
-fps = video.get(cv2.CAP_PROP_FPS)
-total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-frame_width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
-frame_height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
-status = True
+	for i in progressbar(range(frames_for_iteration)):
+		if i <= (fps*(60*10)):
+			continue # skip first 10 mins...
 
-while True:
-	status, frame = video.read()
-	frame_number += 1
+		status, frame = video.read()
+		detected, avg = detect_motion(frame, min_area, delta_thresh, show_video, avg)		
 
-	if frame_number <= (fps*(60*10)):
-		continue # skip first 10 mins...
-	if frame_number >= total_frames - (fps*(60*10)):
-		if writing_clip:
-			writing_clip = False
-			output_video.release()
-		break # stop when 10 mins left
-	
-	if not status: # no more frames to parse, end writing and break
-		if writing_clip:
-			writing_clip = False
-			output_video.release()
-		break
-	
-	detected, avg = detect_motion(frame, min_area, delta_thresh, show_video, avg)		
+		# functionality to handle clip creation for separate motion incidents
+		if detected:
+			motion_length += 1 # increment frames with motion
+			no_motion = 0 # reset frames with no motion
+			# we should be recording clip
+			if not writing_clip and motion_length >= min_motion_frames:
+				clip_count += 1
+				writing_clip = True			
+				output_video = cv2.VideoWriter(f'full_night_output_video_{clip_count}-untrimmed.mp4', fourcc, fps, (frame_width, frame_height))
+				# write frames to video as well as previous x frames
+			elif writing_clip:
+				output_video.write(frame)  # Write the frame to the output video
+		else:
+			motion_length = 0 # reset frames with motion
+			no_motion += 1 # increment frames of no motion
+			if writing_clip and no_motion >= min_clip_gap: # no motion for over 60s, end clip (and shave 30s worth of frames)
+				output_video.release() # stop writing
+				# trim end of clip
+				seconds_to_shave = (min_clip_gap * 0.75) // 8  # get rid of 75% of those last no motion frames
+				trim_video(f'full_night_output_video_{clip_count}-untrimmed.mp4', f'full_night_output_video_{clip_count}.mp4', seconds_to_shave)
+				print('video trimmed.')
+				writing_clip = False
+			elif writing_clip: # continue writing
+				output_video.write(frame)  # Write the frame to the output video
+		
+	# end writing in case last frame was being written
+	if writing_clip:
+		writing_clip = False
+		output_video.release()
 
-	# functionality to handle clip creation for separate motion incidents
-	if detected:
-		motion_length += 1 # increment frames with motion
-		no_motion = 0 # reset frames with no motion
-		# we should be recording clip
-		if not writing_clip and motion_length >= min_motion_frames:
-			clip_count += 1
-			writing_clip = True			
-			output_video = cv2.VideoWriter(f'full_night_output_video_{clip_count}-untrimmed.mp4', fourcc, fps, (frame_width, frame_height))
-			# write frames to video as well as previous x frames
-		elif writing_clip:
-			output_video.write(frame)  # Write the frame to the output video
-	else:
-		motion_length = 0 # reset frames with motion
-		no_motion += 1 # increment frames of no motion
-		if writing_clip and no_motion >= min_clip_gap: # no motion for over 60s, end clip (and shave 30s worth of frames)
-			output_video.release() # stop writing
-			# trim end of clip
-			seconds_to_shave = (min_clip_gap * 0.75) // 8  # get rid of 75% of those last no motion frames
-			trim_video(f'full_night_output_video_{clip_count}-untrimmed.mp4', f'full_night_output_video_{clip_count}.mp4', seconds_to_shave)
-			print('video trimmed.')
-			writing_clip = False
-		elif writing_clip: # continue writing
-			output_video.write(frame)  # Write the frame to the output video
+	end = (time.time() - start) // 60
+	print(f'{total_frames} frames processed in {end} minutes.')
