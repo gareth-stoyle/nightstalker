@@ -1,10 +1,13 @@
 import cv2
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 from progressbar import progressbar
-import video_processing
 import os
 
-def trim_video_by_motion(video_path, output_path):
+import video_processing
+import db
+
+
+def trim_video_by_motion(video_path, output_path, date, start_time):
     '''
     Takes a full length video file and converts into 
     one video compiled of clips where motion is detected
@@ -19,13 +22,14 @@ def trim_video_by_motion(video_path, output_path):
     fps = video.get(cv2.CAP_PROP_FPS)
     total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
     frames_for_iteration = int(total_frames - (fps*(60*20))) # skip last x mins for footage
+    frames_to_skip = int(fps*60*15) # skip first x mins
     frame_width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     # Define the codec
     fourcc = cv2.VideoWriter_fourcc(*'avc1')
 
     # skip first x mins
-    video.set(cv2.CAP_PROP_POS_FRAMES, int(fps*60*15))
+    video.set(cv2.CAP_PROP_POS_FRAMES, frames_to_skip)
 
     # motion detection config
     delta_thresh = 5
@@ -37,12 +41,13 @@ def trim_video_by_motion(video_path, output_path):
     no_motion = 0
     min_motion_frames = 4
     min_clip_gap = fps*30 # no motion enough to end clip and reset things
+    seconds_to_shave = (min_clip_gap * 0.75) // 8  # get rid of 75% of those last no motion frames
     writing_clip = False
     clip_count = 0
 
     ready_clips = []
 
-    for i in progressbar(range(int(fps*60*15), frames_for_iteration)):
+    for i in progressbar(range(frames_to_skip, frames_for_iteration)):
         status, frame = video.read()
         detected, avg = detect_motion(frame, min_area, delta_thresh, avg)		
 
@@ -50,28 +55,64 @@ def trim_video_by_motion(video_path, output_path):
         if detected:
             motion_length += 1 # increment frames with motion
             no_motion = 0 # reset frames with no motion
-            # we should be recording clip
-            if not writing_clip and motion_length >= min_motion_frames:
+            if not writing_clip and motion_length < min_motion_frames:
+                continue
+            
+            # we know we are going to write this frame
+            # draw the timestamp on the frame
+            ts = calculate_timestamp(start_time, fps, i)
+            font_scale = 1  # Increase this value for bigger text
+            font_color = (255, 255, 255)  # White color
+            font_thickness = 2  # Thickness of the text
+            font = cv2.FONT_HERSHEY_SIMPLEX
+
+            # Get the size of the text
+            text_size = cv2.getTextSize(ts, font, font_scale, font_thickness)[0]
+
+            # Position of the text (top-left corner)
+            text_position = (10, text_size[1] + 10)
+
+            # Draw text on the frame
+            cv2.putText(frame, ts, text_position, font, font_scale, font_color, font_thickness)
+            if writing_clip:
+                output_video.write(frame)  # Write the frame to the output video
+            else: # lets start writing
                 clip_count += 1
+                clip_start_time = calculate_timestamp(start_time, fps, i)
                 writing_clip = True	
                 input_clip_path = f'app/static/videos/full_night_output_video_{clip_count}-untrimmed.mp4'
                 output_video = cv2.VideoWriter(input_clip_path, fourcc, fps, (frame_width, frame_height))
                 output_video.write(frame)
                 # write frames to video as well as previous x frames
-            elif writing_clip:
-                output_video.write(frame)  # Write the frame to the output video
         else:
             motion_length = 0 # reset frames with motion
             no_motion += 1 # increment frames of no motion
-            if writing_clip and no_motion >= min_clip_gap: # no motion ,end clip (and shave frames)
+            if writing_clip and no_motion >= min_clip_gap: # no motion, end clip (and shave frames)
                 output_video.release() # stop writing
                 # trim end of clip
-                seconds_to_shave = (min_clip_gap * 0.75) // 8  # get rid of 75% of those last no motion frames
                 trimmed_clip_path = f'app/static/videos/full_night_output_video_{clip_count}.mp4'
                 video_processing.trim_video(input_clip_path, trimmed_clip_path, seconds_to_shave)
                 ready_clips.append(trimmed_clip_path)
+                clip_end_time = calculate_timestamp(start_time, fps, i)
+                db.insert_clip_entry(date, clip_count, clip_start_time, clip_end_time)
                 writing_clip = False
             elif writing_clip: # continue writing
+                # draw the text and timestamp on the frame
+                ts = calculate_timestamp(start_time, fps, i)
+                # Draw the timestamp on the frame
+                font_scale = 1  # Increase this value for bigger text
+                font_color = (255, 255, 255)  # White color
+                font_thickness = 2  # Thickness of the text
+                font = cv2.FONT_HERSHEY_SIMPLEX
+
+                # Get the size of the text
+                text_size = cv2.getTextSize(ts, font, font_scale, font_thickness)[0]
+
+                # Position of the text (top-left corner)
+                text_position = (10, text_size[1] + 10)
+
+                # Draw text on the frame
+                cv2.putText(frame, ts, text_position, font, font_scale, font_color, font_thickness)
                 output_video.write(frame)  # Write the frame to the output video
         
     # end writing in case last frame was being written
@@ -130,8 +171,20 @@ def detect_motion(frame, min_area, delta_thresh, avg):
         
     return (detected, avg)
 
+def calculate_timestamp(start_time, fps, frame_number):
+    '''Calculate the timestamp to put on a frame'''
+    start_hour, start_minute, start_second = map(int, start_time.split(':'))
+    start_seconds = start_hour * 3600 + start_minute * 60 + start_second
+    elapsed_seconds = frame_number / fps
+    total_seconds = start_seconds + elapsed_seconds
+    total_seconds %= 86400  # Ensure it's within a 24-hour period
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds % 3600) // 60)
+    seconds = int(total_seconds % 60)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+
 
 if __name__ == "__main__":
     mp4_path = "/Users/macbook/Desktop/Computer Science/Projects/nightstalker/app/static/videos/full-2024-01-21_footage.mp4"
     output_video = "/Users/macbook/Desktop/Computer Science/Projects/nightstalker/app/static/videos/processed-full-2024-01-21_footage.mp4"
-    trim_video_by_motion(mp4_path, output_video)
+    trim_video_by_motion(mp4_path, output_video, '2024-01-21', '23:25:00')
