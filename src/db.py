@@ -1,7 +1,7 @@
 import json
 
 def insert_video_entry(date, start_time, end_time):
-    with open('db.json', 'r') as f: 
+    with open('src/db.json', 'r') as f: 
         entries = json.load(f)
     # check if date already exists and return error
     
@@ -11,7 +11,7 @@ def insert_video_entry(date, start_time, end_time):
         'clips': {}
     }
 
-    with open('db.json', 'w+') as f:
+    with open('src/db.json', 'w+') as f:
         json.dump(entries, f, indent=4)
 
     return True
@@ -44,3 +44,9 @@ def retrieve_clips(date):
         return entries[date]['clips']
     except:
         return False
+    
+def insert_sensor_entry(start_date, type, timestamp, entry):
+    pass
+
+def retrieve_sensor_entry(start_date, type, timestamp, entry):
+    pass

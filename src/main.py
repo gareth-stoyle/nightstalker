@@ -26,7 +26,7 @@ framerate = 8
 resolution = '720x480'
 camera = camera.Camera(framerate, resolution, flip=True)
 camera.start_recording(path, video_file)
-start_time = datetime.now().strftime('%H:%M:%S')
+start_time = datetime.datetime.now().strftime('%H:%M:%S')
 
 print(f"Recording video to {video_file} in the path: {path}. Press 'q' and Enter to stop.")
 
@@ -44,7 +44,7 @@ except Exception as e:
 finally:
     print('Ending recording sessions...')
     camera.stop_recording()
-    end_time = datetime.now().strftime('%H:%M:%S')
+    end_time = datetime.datetime.now().strftime('%H:%M:%S')
     time.sleep(0.1) # just in case there is a delay in finishing file writing
     # h264 to mp4 conversion
     conversion_status, mp4_path = video_processing.convert_h264_to_mp4(path, video_file, framerate)
@@ -53,7 +53,9 @@ finally:
     #     video_processing.delete_file(full_video_path)
     db.insert_video_entry(current_date, start_time, end_time)
     print(f'Recording successfully captured in {mp4_path}')
-    print('Merging motion detected clips')
-    motion_algorithm.trim_video_by_motion(mp4_path, clips_output_path, current_date, start_time)
-    print(f"Clips successfully merged to {clips_output_path}")    
-
+    print('Getting motion detected clips')
+    motion_merged = motion_algorithm.trim_video_by_motion(mp4_path, clips_output_path, current_date, start_time)
+    if motion_merged:
+        print(f"Clips successfully merged to {clips_output_path}")
+    else:
+        print("Problem in motion detection functionality!")

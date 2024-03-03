@@ -21,8 +21,10 @@ def trim_video_by_motion(video_path, output_path, date, start_time):
     # get video details
     fps = video.get(cv2.CAP_PROP_FPS)
     total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
-    frames_for_iteration = int(total_frames - (fps*(60*20))) # skip last x mins for footage
-    frames_to_skip = int(fps*60*15) # skip first x mins
+    frames_to_skip = 0
+    frames_for_iteration = total_frames-8
+    # frames_for_iteration = int(total_frames - (fps*(60*20))) # skip last x mins for footage
+    # frames_to_skip = int(fps*60*15) # skip first x mins
     frame_width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
     # Define the codec
@@ -119,8 +121,17 @@ def trim_video_by_motion(video_path, output_path, date, start_time):
     if writing_clip:
         writing_clip = False
         output_video.release()
+        trimmed_clip_path = f'app/static/videos/full_night_output_video_{clip_count}.mp4'
+        video_processing.trim_video(input_clip_path, trimmed_clip_path, 1)
+        ready_clips.append(trimmed_clip_path)
+        clip_end_time = calculate_timestamp(start_time, fps, i)
+        db.insert_clip_entry(date, clip_count, clip_start_time, clip_end_time)
 
-    merge_video_clips(ready_clips, output_path)
+    try:
+        merge_video_clips(ready_clips, output_path)
+    except ValueError as e:
+        print(f'Error, likely no motion detected: {e}')
+        return False
     return True
 
 def merge_video_clips(input_paths, output_path):

@@ -6,7 +6,7 @@ test:
 
 record: test
 	@echo "Recording sleep..."
-	python -u src/record.py 2>&1 | tee record_log.txt
+	python -u src/main.py 2>&1 | tee record_log.txt
 
 server:
 	@echo "Starting Flask server..."
