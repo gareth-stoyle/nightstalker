@@ -24,8 +24,8 @@ clips_output_path = path + '/' + f'{current_date}_footage.mp4'
 #
 
 framerate = 8
-resolution = '720x480'
-camera = camera.Camera(framerate, resolution, flip=True)
+resolution = '640x360'
+camera = camera.Camera(framerate, resolution, flip=False)
 
 #
 # Video recording
@@ -34,7 +34,7 @@ camera = camera.Camera(framerate, resolution, flip=True)
 camera.start_recording(path, video_file)
 start_time = datetime.datetime.now().strftime('%H:%M:%S')
 
-print(f"Recording video to {video_file} in the path: {path}. Press 'q' and Enter to stop.")
+print(f"Recording video to {video_file} in the path: {path}.\nPress 'q' and Enter to stop.")
 
 #
 # Sensor logging
@@ -42,7 +42,6 @@ print(f"Recording video to {video_file} in the path: {path}. Press 'q' and Enter
 
 motion_sensor = sensors.MotionSensor(motion_pin=22)
 dht_sensor = sensors.DHTSensor(dht_pin=18)
-# mic_sensor = Microphone(mic_pin=22)
 
 try:
     dht_sensor.start_recording()
@@ -66,12 +65,12 @@ finally:
     print('Ending sensor logging...')
     dht_sensor.stop_recording()
     motion_sensor.stop_recording()
+
     print('Ending recording sessions...')
     camera.stop_recording()
     end_time = datetime.datetime.now().strftime('%H:%M:%S')
     time.sleep(0.1) # just in case there is a delay in finishing file writing
-    
-    # h264 to mp4 conversion
+
     conversion_status, mp4_path = video_processing.convert_h264_to_mp4(path, video_file, framerate)
     # Delete h264
     if conversion_status:
