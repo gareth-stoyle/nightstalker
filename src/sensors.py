@@ -25,7 +25,8 @@ class Led:
         status = GPIO.input(self.led_pin)
         return status == GPIO.HIGH
     
-#KS0052 motion sensor
+# KS0052 motion sensor - probably not necessary, will likely remove
+# motion algorithm is good enough to not need this
 class MotionSensor:
     def __init__(self, motion_pin):
         self.motion_pin = motion_pin
@@ -134,7 +135,7 @@ class DHTSensor:
             self.thread.join()
 
                 
-# KS0035 - microphone seems faulty
+# KS0035 - microphone seems faulty, will consider replacing
 class Microphone:
     def __init__(self, mic_pin):
         self.mic_pin = mic_pin

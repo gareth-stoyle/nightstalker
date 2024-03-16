@@ -40,7 +40,7 @@ print(f"Recording video to {video_file} in the path: {path}.\nPress 'q' and Ente
 # Sensor logging
 #
 
-motion_sensor = sensors.MotionSensor(motion_pin=22)
+motion_sensor = sensors.MotionSensor(motion_pin=22) # probably not necessary, will likely remove
 dht_sensor = sensors.DHTSensor(dht_pin=18)
 
 try:

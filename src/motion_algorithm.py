@@ -102,7 +102,6 @@ def detect_motion(frame, min_area, delta_thresh, avg):
     # if the average frame is None, initialize it
     if avg is None:
         avg = gray.copy().astype("float")
-        # rawCapture.truncate(0)
         return (False, avg)
     # accumulate the weighted average between the current frame and
     # previous frames, then compute the difference between the current
@@ -180,3 +179,16 @@ def get_config(video):
     config['font'] = cv2.FONT_HERSHEY_SIMPLEX
 
     return config
+
+
+if __name__ == "__main__":
+    mp4_path = '/home/gareth/Desktop/nightstalker/app/static/videos/unprocessed-2024-03-12_footage.mp4'
+    clips_output_path = '/home/gareth/Desktop/nightstalker/app/static/videos/2024-03-12_footage.mp4'
+    current_date = "2024-03-12"
+    start_time = "00:13:56"
+    print('Getting motion detected clips')
+    motion_merged = trim_video_by_motion(mp4_path, clips_output_path, current_date, start_time)
+    if motion_merged:
+        print(f"Clips successfully merged to {clips_output_path}")
+    else:
+        print("Problem in motion detection functionality!")

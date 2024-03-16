@@ -5,6 +5,7 @@ server_log.txt
 record_log.txt
 .vscode/
 *.json
+.sandbox
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
