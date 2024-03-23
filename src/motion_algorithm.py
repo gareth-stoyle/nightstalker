@@ -2,6 +2,7 @@ import cv2
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 from progressbar import progressbar
 import os
+import math
 
 import video_processing
 import db
@@ -58,9 +59,9 @@ def trim_video_by_motion(video_path, output_path, date, start_time):
                 output_video.release() # stop writing
                 # trim end of clip
                 trimmed_clip_path = f'app/static/videos/full_night_output_video_{clip_count}.mp4'
-                video_processing.trim_video(input_clip_path, trimmed_clip_path, config['seconds_to_shave'])
+                video_processing.trim_video(input_clip_path, trimmed_clip_path, config['frames_to_shave'] / config['fps'])
                 ready_clips.append(trimmed_clip_path)
-                clip_end_time = calculate_timestamp(start_time, config['fps'], i)
+                clip_end_time = calculate_timestamp(start_time, config['fps'], i-config['frames_to_shave'])
                 db.insert_clip_entry(date, clip_count, clip_start_time, clip_end_time)
                 writing_clip = False
             elif writing_clip: # continue writing
@@ -74,7 +75,7 @@ def trim_video_by_motion(video_path, output_path, date, start_time):
         trimmed_clip_path = f'app/static/videos/full_night_output_video_{clip_count}.mp4'
         video_processing.trim_video(input_clip_path, trimmed_clip_path, 1)
         ready_clips.append(trimmed_clip_path)
-        clip_end_time = calculate_timestamp(start_time, config['fps'], i)
+        clip_end_time = calculate_timestamp(start_time, config['fps'], i - config['fps'])
         db.insert_clip_entry(date, clip_count, clip_start_time, clip_end_time)
 
     try:
@@ -143,7 +144,7 @@ def calculate_timestamp(start_time, fps, frame_number):
     start_hour, start_minute, start_second = map(int, start_time.split(':'))
     start_seconds = start_hour * 3600 + start_minute * 60 + start_second
     elapsed_seconds = frame_number / fps
-    total_seconds = start_seconds + elapsed_seconds
+    total_seconds = math.ceil(start_seconds + elapsed_seconds)
     total_seconds %= 86400  # Ensure it's within a 24-hour period
     hours = int(total_seconds // 3600)
     minutes = int((total_seconds % 3600) // 60)
@@ -170,7 +171,7 @@ def get_config(video):
     # clip saving algo config
     config['min_motion_frames'] = 4
     config['min_clip_gap'] = config['fps']*30 # no motion enough to end clip and reset things
-    config['seconds_to_shave'] = (config['min_clip_gap'] * 0.75) // 8  # get rid of 75% of those last no motion frames
+    config['frames_to_shave'] = (config['min_clip_gap'] * 0.75)  # get rid of 75% of those last no motion frames
 
     # drawing timestamp on frame
     config['font_scale'] = 1  # Increase this value for bigger text

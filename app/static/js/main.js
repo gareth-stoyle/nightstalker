@@ -10,7 +10,8 @@ console.log(invalidDate);
 console.log(hrData);
 console.log(sleepData);
 console.log(timeRange);
-console.log(videoFile);
+console.log(videoData);
+console.log(videoFilename);
 
 if (timeRangeSpansMulti) {
     console.log('Time range spans multiple days');
@@ -24,7 +25,7 @@ dateInput.addEventListener('change', handleDateChange);
         handleInvalidDate();
     }
     
-if (!videoFile) {
+if (!videoFilename) {
     noVideoMessage();
 } else {
     createTimeSlider();

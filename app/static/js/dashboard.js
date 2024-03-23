@@ -21,7 +21,7 @@ function loadVideo() {
     videoElement.preload = "preload";
 
     // Set the src attribute with the video file path
-    videoElement.src = "/display/" + videoFile;
+    videoElement.src = "/display/" + videoFilename;
 
     // Append the video element to the video_container div
     videoContainerDiv.appendChild(videoElement);
