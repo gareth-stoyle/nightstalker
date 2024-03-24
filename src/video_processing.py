@@ -57,4 +57,4 @@ def find_video(date):
         return video_file
     else:
         print(f"The video file '{video_file}' does not exist.")
-        return None
+        return False

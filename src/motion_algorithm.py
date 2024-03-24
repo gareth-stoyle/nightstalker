@@ -183,10 +183,10 @@ def get_config(video):
 
 
 if __name__ == "__main__":
-    mp4_path = '/home/gareth/Desktop/nightstalker/app/static/videos/unprocessed-2024-03-12_footage.mp4'
-    clips_output_path = '/home/gareth/Desktop/nightstalker/app/static/videos/2024-03-12_footage.mp4'
-    current_date = "2024-03-12"
-    start_time = "00:13:56"
+    mp4_path = '/home/gareth/Desktop/nightstalker/app/static/videos/unprocessed-2024-03-13_footage.mp4'
+    clips_output_path = '/home/gareth/Desktop/nightstalker/app/static/videos/2024-03-13_footage.mp4'
+    current_date = "2024-03-13"
+    start_time = "22:57:16"
     print('Getting motion detected clips')
     motion_merged = trim_video_by_motion(mp4_path, clips_output_path, current_date, start_time)
     if motion_merged:

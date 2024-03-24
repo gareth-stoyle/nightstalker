@@ -1,6 +1,7 @@
 import sys
 import os
-from flask import Flask, render_template, request, redirect, url_for
+import json
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from datetime import datetime, timedelta
 # to allow for importing of files from ../src
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -12,9 +13,14 @@ import db
 
 app = Flask(__name__)
 
+
 @app.route('/', methods=['GET'])
 def dashboard():
     invalid_date = False
+    time_range = False
+    time_range_spans_multi = False
+    hr_data = False
+    sleep_data = False
     requested_date = request.args.get('date')
 
     if not requested_date:
@@ -25,13 +31,17 @@ def dashboard():
         requested_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
 
     video_data = db.retrieve_video(requested_date)
-    time_range = [video_data['start_time'], video_data['end_time']]
-    time_range_spans_multi = fitbit.time_range_spans_multidays(time_range)
-    video_filename = video_processing.find_video(requested_date)
 
-    hr_data = fitbit.get_hr_data(requested_date, time_range_spans_multi, time_range)
-    sleep_data = fitbit.get_sleep_data(requested_date, time_range_spans_multi)
+    if video_data:
+        time_range = [video_data['start_time'], video_data['end_time']]
+        time_range_spans_multi = fitbit.time_range_spans_multidays(time_range)
+        hr_data = fitbit.get_hr_data(requested_date, time_range_spans_multi, time_range)
+        sleep_data = fitbit.get_sleep_data(requested_date, time_range_spans_multi)
+
+    video_filename = video_processing.find_video(requested_date)
     
+    print(type(video_data))
+
     return render_template("dashboard.html", 
                            hr_data=hr_data, 
                            sleep_data=sleep_data,
@@ -39,7 +49,7 @@ def dashboard():
                            invalid_date=invalid_date,
                            time_range=time_range,
                            time_range_spans_multi=time_range_spans_multi,
-                           video_date=video_data,
+                           video_data=video_data,
                            video_filename=video_filename)
 
 	

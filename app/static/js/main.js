@@ -13,6 +13,9 @@ console.log(timeRange);
 console.log(videoData);
 console.log(videoFilename);
 
+console.log(videoData.clips);
+
+
 if (timeRangeSpansMulti) {
     console.log('Time range spans multiple days');
 } else {

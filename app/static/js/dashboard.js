@@ -88,7 +88,9 @@ function timeSliderHandler() {
     // Calculate selected time to output based on current seconds and the start time of recording
     var startSeconds = convertToSeconds(timeRange[0]);
     var currentSeconds = parseInt(this.value);
-    var totalSecondsToConvert = startSeconds + currentSeconds
+    console.log("startSeconds");
+    console.log(startSeconds);
+    var totalSecondsToConvert = startSeconds + secondsElapsedSinceVideoStart(currentSeconds);
     var selectedTime = convertToTime(totalSecondsToConvert);
 
     // Update the paragraph with the selected time
@@ -107,7 +109,6 @@ function timeSliderHandler() {
 }
 
 function seekVideo(seconds) {
-
         var videoElement = document.getElementById("my_video");
         // Set the current time of the video to the calculated seek time
         videoElement.currentTime = seconds;
@@ -147,6 +148,28 @@ function handleInvalidDate() {
 ------------- HELPER FUNCTIONS -------------
 
 *******************************************/
+function secondsElapsedSinceVideoStart(currentSeconds) {
+    // analyses clip timing to understand how many seconds have elapsed
+    // since the video start time.
+    console.log("in secondsElapsedSinceVideoStart")
+    console.log("currentSeconds")
+    console.log(currentSeconds)
+
+    for (i=0; i<length(videoData.clips); i++) {
+        let secondsElapsed = 0;
+        // start_time & end_time to seconds
+        let startTimeSeconds = videoData.clips.i.start_time; // get in seconds!!!
+        let endTimeSeconds = videoData.clips.i.start_time; // get in seconds!!!
+        secondsElapsed = secondsElapsed + (endTimeSeconds - startTimeSeconds);
+
+        // if secondsElapsed < currentSeconds, got to next clip incrementing the secondsElapsed
+
+        // else secondsElapsed > currentSeconds, find the difference and end time - difference is the time to return?
+
+        // else they are equal, end_time of this clip is the time to return?
+
+    }
+}
 
 function convertToTime(totalSeconds) {
     // Calculate hours, minutes, and seconds from the total seconds
