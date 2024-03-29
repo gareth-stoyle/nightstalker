@@ -1,49 +1,5 @@
 // Functions to insert data into HTML
 
-function setMotionData(time) {
-    // Convert time to unix timestamp
-    var unixTime = getUnixTime(requestedDate, time, plusOne=false);
-    var unixTimePlusOne = getUnixTime(requestedDate, time, plusOne=true);
-    // Check if the container already exists
-    var existingMotionDataContainer = document.getElementById('motion_data');
-    
-    // If it exists, remove existing container
-    if (existingMotionDataContainer) {
-        existingMotionDataContainer.remove();
-    }
-
-    // Create the container div
-    var MotionDataContainer = document.createElement('div');
-    MotionDataContainer.setAttribute('class', 'container');
-    MotionDataContainer.setAttribute('id', 'motion_data');
-
-    // Create the h4 element for heart rate
-    var motionElement = document.createElement('h4');
-    motionElement.setAttribute('id', 'motion');
-    
-    var selectedMotion;
-    // unix time could be based on requestedDate, or the following day
-    for (let key in motionData) {
-        if (Math.floor(key / 100) == Math.floor(unixTime / 100)) {
-            selectedMotion = motionData[key];
-        }
-        if (Math.floor(key / 100) == Math.floor(unixTimePlusOne / 100)) {
-            selectedMotion = motionData[key];
-        }
-    }
-
-    if (selectedMotion) {
-        motionElement.textContent = 'Motion: ' + selectedMotion;
-    } else {
-        motionElement.textContent = 'Motion: Not Found'; // Handle the case when no data is found
-    }
-
-    // Get the container div and append
-    var mainContainer = document.getElementById('container');
-    MotionDataContainer.appendChild(motionElement);
-    mainContainer.appendChild(MotionDataContainer);
-}
-
 function setTempData(time) {
     // Convert time to unix timestamp
     var unixTime = getUnixTime(requestedDate, time, plusOne=false);

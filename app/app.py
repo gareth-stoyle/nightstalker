@@ -21,7 +21,6 @@ def dashboard():
     time_range_spans_multi = False
     hr_data = False
     sleep_data = False
-    motion_data = False
     temp_data = False
     requested_date = request.args.get('date')
 
@@ -39,7 +38,6 @@ def dashboard():
         time_range_spans_multi = fitbit.time_range_spans_multidays(time_range)
         hr_data = fitbit.get_hr_data(requested_date, time_range_spans_multi, time_range)
         sleep_data = fitbit.get_sleep_data(requested_date, time_range_spans_multi)
-        motion_data = db.retrieve_sensor_entries(requested_date, 'motion')
         temp_data = db.retrieve_sensor_entries(requested_date, 'temperature')
         humidity_data = db.retrieve_sensor_entries(requested_date, 'humidity')
 
@@ -50,7 +48,6 @@ def dashboard():
     return render_template("dashboard.html", 
                            hr_data=hr_data, 
                            sleep_data=sleep_data,
-                           motion_data=motion_data, 
                            temp_data=temp_data,
                            humidity_data=humidity_data, 
                            requested_date=requested_date,
