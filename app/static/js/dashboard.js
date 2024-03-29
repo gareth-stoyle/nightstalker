@@ -28,21 +28,16 @@ function loadVideo() {
 
     // Append the video_container div to the container div
     containerDiv.appendChild(videoContainerDiv);
+    videoElement.addEventListener('timeupdate', function() {
+        timeSliderHandler.call({ currentTime: this.currentTime }, 'video');
+    });
 }
 
 // Function to create time slider based on hrData start and end times
 function createTimeSlider() {
     // Assign max based on the extracted time values
-    var max = convertToSeconds(timeRange[1]);
-
-    // if video spans two days the slider should be length max + (start time in seconds - 24 hours in seconds)
-    if (timeRangeSpansMulti) {
-        max = max + (86400 - convertToSeconds(timeRange[0]))
-    } else { // otherwise start time in seconds should be taken from max
-        max = max - convertToSeconds(timeRange[0]);
-    }
-
-    var selectedTime = timeRange[0];
+    var max = videoData.duration;
+    var selectedTime = videoData.clips[1]['start_time'];
 
     // Create the container div
     var sliderContainer = document.createElement('div');
@@ -59,14 +54,8 @@ function createTimeSlider() {
     inputElement.setAttribute('step', 1);
     inputElement.setAttribute('value', '0');
 
-    // Create the paragraph element for selected time
-    var selectedTimeHeader = document.createElement('h4');
-    selectedTimeHeader.setAttribute('id', 'selected_time');
-    selectedTimeHeader.textContent = 'Selected Time: ' + selectedTime;
-
     // Append the elements to the container
     sliderContainer.appendChild(inputElement);
-    sliderContainer.appendChild(selectedTimeHeader);
 
     // Get the container div
     var mainContainer = document.getElementById('container');
@@ -78,34 +67,30 @@ function createTimeSlider() {
     
     setHrData(selectedTime);
     setSleepData(selectedTime);
+    setMotionData(selectedTime);
+    setTempData(selectedTime);
+    setHumidityData(selectedTime);
 }
 
 // Function to handle time slider control
-function timeSliderHandler() {
-    // Get the paragraph to display the selected time
-    var selectedTimeHeader = document.getElementById('selected_time');
-
+function timeSliderHandler(source) {
     // Calculate selected time to output based on current seconds and the start time of recording
-    var startSeconds = convertToSeconds(timeRange[0]);
-    var currentSeconds = parseInt(this.value);
-    console.log("startSeconds");
-    console.log(startSeconds);
-    var totalSecondsToConvert = startSeconds + secondsElapsedSinceVideoStart(currentSeconds);
+    var startSeconds = convertToSeconds(videoData.clips[1]['start_time']);
+    // Determine the source of currentSeconds
+    var currentSeconds = parseInt(this.currentTime);
+    var totalSecondsToConvert = secondsElapsedSinceVideoStart(currentSeconds);
     var selectedTime = convertToTime(totalSecondsToConvert);
 
-    // Update the paragraph with the selected time
-    selectedTimeHeader.textContent = 'Selected Time: ' + selectedTime;
-
-    seekVideo(currentSeconds);
+    if (source == 'slider') {
+        seekVideo(currentSeconds);
+    }
 
     // if there is no data, these divs can stay on Not Found
-    if (hrData.length > 0) {
-        setHrData(selectedTime);
-    }
-
-    if (sleepData.sleep.length > 0) {
-        setSleepData(selectedTime);
-    }
+    if (hrData.length > 0) {setHrData(selectedTime);}
+    if (sleepData.sleep.length > 0) {setSleepData(selectedTime);}
+    if (motionData) {setMotionData(selectedTime);}
+    if (tempData) {setTempData(selectedTime);}
+    if (humidityData) {setHumidityData(selectedTime);}
 }
 
 function seekVideo(seconds) {
@@ -151,23 +136,23 @@ function handleInvalidDate() {
 function secondsElapsedSinceVideoStart(currentSeconds) {
     // analyses clip timing to understand how many seconds have elapsed
     // since the video start time.
-    console.log("in secondsElapsedSinceVideoStart")
-    console.log("currentSeconds")
-    console.log(currentSeconds)
+    let secondsElapsed = 0;
+    let diff = 0;
 
-    for (i=0; i<length(videoData.clips); i++) {
-        let secondsElapsed = 0;
+    for (i=1; i<=Object.keys(videoData.clips).length; i++) {
         // start_time & end_time to seconds
-        let startTimeSeconds = videoData.clips.i.start_time; // get in seconds!!!
-        let endTimeSeconds = videoData.clips.i.start_time; // get in seconds!!!
+        let startTimeSeconds = convertToSeconds(videoData.clips[i]['start_time']);
+        let endTimeSeconds = convertToSeconds(videoData.clips[i]['end_time']);
         secondsElapsed = secondsElapsed + (endTimeSeconds - startTimeSeconds);
-
-        // if secondsElapsed < currentSeconds, got to next clip incrementing the secondsElapsed
-
-        // else secondsElapsed > currentSeconds, find the difference and end time - difference is the time to return?
-
-        // else they are equal, end_time of this clip is the time to return?
-
+        
+        if (secondsElapsed < currentSeconds) {
+            continue;
+        } else if (secondsElapsed > currentSeconds) {
+            diff = secondsElapsed - currentSeconds;
+            return endTimeSeconds - diff;
+        } else {
+            return endTimeSeconds;
+        }
     }
 }
 

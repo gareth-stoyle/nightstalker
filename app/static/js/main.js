@@ -9,6 +9,9 @@ console.log(requestedDate);
 console.log(invalidDate);
 console.log(hrData);
 console.log(sleepData);
+console.log(motionData);
+console.log(tempData);
+console.log(humidityData);
 console.log(timeRange);
 console.log(videoData);
 console.log(videoFilename);
@@ -33,5 +36,7 @@ if (!videoFilename) {
 } else {
     createTimeSlider();
     var timeSlider = document.getElementById('time_slider_input');
-    timeSlider.addEventListener('input', timeSliderHandler);
+    timeSlider.addEventListener('input', function() {
+        timeSliderHandler.call({ currentTime: this.value }, 'slider');
+    });
 }

@@ -16,9 +16,22 @@ def insert_video_entry(date, start_time, end_time):
 
     return True
 
+def insert_video_duration(date, duration):
+    with open('databases/videos.json', 'r') as f: 
+        entries = json.load(f)
+    # check if date already exists and return error?
+
+    entries[date]['duration'] = duration
+
+    with open('databases/videos.json', 'w+') as f:
+        json.dump(entries, f, indent=4)
+
+    return True
+
 def insert_clip_entry(date, clip_number, start_time, end_time):
     with open('databases/videos.json', 'r') as f: 
         entries = json.load(f)
+        
     entries[date]['clips'][clip_number] = {
         'start_time': start_time,
         'end_time': end_time,

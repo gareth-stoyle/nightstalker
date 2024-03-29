@@ -83,6 +83,10 @@ def trim_video_by_motion(video_path, output_path, date, start_time):
     except ValueError as e:
         print(f'Error, likely no motion detected: {e}')
         return False
+    
+    clip_duration = get_video_duration(output_path)
+    db.insert_video_duration(date, clip_duration)
+    
     return True
 
 def merge_video_clips(input_paths, output_path):
@@ -138,6 +142,20 @@ def add_timestamp(frame, start_time, fps, frame_number, font, font_scale, font_c
     text_position = (10, text_size[1] + 10)
     cv2.putText(frame, ts, text_position, font, font_scale, font_color, font_thickness)
     return frame
+
+def get_video_duration(video_path):
+    cap = cv2.VideoCapture(video_path)
+
+    if not cap.isOpened():
+        print("Error: Could not open video file.")
+        return
+
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    duration_sec = total_frames / fps
+    cap.release()
+
+    return duration_sec
 
 def calculate_timestamp(start_time, fps, frame_number):
     '''Calculate the timestamp to put on a frame'''
