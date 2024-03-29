@@ -67,7 +67,6 @@ function createTimeSlider() {
     
     setHrData(selectedTime);
     setSleepData(selectedTime);
-    setMotionData(selectedTime);
     setTempData(selectedTime);
     setHumidityData(selectedTime);
 }
@@ -88,7 +87,6 @@ function timeSliderHandler(source) {
     // if there is no data, these divs can stay on Not Found
     if (hrData.length > 0) {setHrData(selectedTime);}
     if (sleepData.sleep.length > 0) {setSleepData(selectedTime);}
-    if (motionData) {setMotionData(selectedTime);}
     if (tempData) {setTempData(selectedTime);}
     if (humidityData) {setHumidityData(selectedTime);}
 }

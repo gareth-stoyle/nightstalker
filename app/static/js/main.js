@@ -9,7 +9,6 @@ console.log(requestedDate);
 console.log(invalidDate);
 console.log(hrData);
 console.log(sleepData);
-console.log(motionData);
 console.log(tempData);
 console.log(humidityData);
 console.log(timeRange);
