@@ -1,0 +1,52 @@
+html {
+    padding: 0;
+    margin: 0;
+}
+
+
+h2 {
+    font-family: Copperplate, Arial, Helvetica;
+    padding-top: 5px;
+    padding-top: 5px;
+}
+
+.p3 {
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+
+
+#video_container {
+    margin: 138px auto;
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.6);
+}
+
+#side-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.6);
+}
+
+#side-column {
+    background: linear-gradient(180deg, rgba(33,37,41,1) 0%, rgba(26,71,116,1) 50%, rgba(33,37,41,1) 100%);
+}
+
+.form-range::-webkit-slider-thumb {
+    background: rgba(26, 84, 143, 1);
+}
+  
+.form-range::-moz-range-thumb {
+    background: rgba(26, 84, 143, 1);
+}
+  
+.form-range::-ms-thumb {
+    background: rgba(26, 84, 143, 1);
+}
+
+.inset-shadow {
+    box-shadow: inset 0 0 15px #000000;
+}
