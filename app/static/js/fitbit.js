@@ -46,23 +46,29 @@ function setSleepData(time) {
 
     // Create the container div
     var sleepDataContainer = document.createElement('div');
-    sleepDataContainer.setAttribute('class', 'container');
+    sleepDataContainer.setAttribute('class', 'card mb-4 mx-auto');
     sleepDataContainer.setAttribute('id', 'fitbit_sleep_data');
+    sleepDataContainer.setAttribute('style', 'width: 50%;');
 
-    // Create the h4 element for heart rate
+    // Create the card div
+    var sleepDataContainerCard = document.createElement('div');
+    sleepDataContainerCard.setAttribute('class', 'card-body text-center');
+
+    // Create the h4 element for sleep stage
     var sleepStageElement = document.createElement('h4');
     sleepStageElement.setAttribute('id', 'sleep_stage');
     
     var selectedSleepStage = getSleepStage(time);
     if (selectedSleepStage) {
-        sleepStageElement.textContent = 'Sleep Stage: ' + selectedSleepStage.value;
+        sleepStageElement.textContent = '🛌 ' + selectedSleepStage.value;
     } else {
-        sleepStageElement.textContent = 'Sleep Stage: Not Found'; // Handle the case when no data is found
+        sleepStageElement.textContent = '🛌 Not Found'; // Handle the case when no data is found
     }
 
     // Get the container div and append
-    var mainContainer = document.getElementById('container');
-    sleepDataContainer.appendChild(sleepStageElement);
+    var mainContainer = document.getElementById('side_column');
+    sleepDataContainerCard.appendChild(sleepStageElement);
+    sleepDataContainer.appendChild(sleepDataContainerCard);
     mainContainer.appendChild(sleepDataContainer);
 }
 
@@ -90,8 +96,13 @@ function setHrData(time) {
 
     // Create the container div
     var hrDataContainer = document.createElement('div');
-    hrDataContainer.setAttribute('class', 'container');
+    hrDataContainer.setAttribute('class', 'card mb-4 mx-auto');
     hrDataContainer.setAttribute('id', 'fitbit_hr_data');
+    hrDataContainer.setAttribute('style', 'width: 50%;');
+
+    // Create the card div
+    var hrDataContainerCard = document.createElement('div');
+    hrDataContainerCard.setAttribute('class', 'card-body text-center');
 
     // Create the h4 element for heart rate
     var heartRateElement = document.createElement('h4');
@@ -99,14 +110,15 @@ function setHrData(time) {
     
     var selectedHeartRate = hrData.find(entry => entry.time === modifiedTime);
     if (selectedHeartRate) {
-        heartRateElement.textContent = 'Heart Rate: ' + selectedHeartRate.value;
+        heartRateElement.textContent = '❤️ ' + selectedHeartRate.value;
     } else {
-        heartRateElement.textContent = 'Heart Rate: Not Found'; // Handle the case when no data is found
+        heartRateElement.textContent = '❤️ Not Found'; // Handle the case when no data is found
     }
 
     // Get the container div and append
-    var mainContainer = document.getElementById('container');
-    hrDataContainer.appendChild(heartRateElement);
+    var mainContainer = document.getElementById('side_column');
+    hrDataContainerCard.appendChild(heartRateElement);
+    hrDataContainer.appendChild(hrDataContainerCard);
     mainContainer.appendChild(hrDataContainer);
 }
 

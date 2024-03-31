@@ -6,12 +6,13 @@
 
 // Function to load the video in html.
 function loadVideo() {
-    var containerDiv = document.getElementById("container");
+    var mainColumnDiv = document.getElementById("main_column");
 
     // Create the video_container div
     var videoContainerDiv = document.createElement("div");
     videoContainerDiv.id = "video_container";
-    videoContainerDiv.style.margin = "10px auto";
+    videoContainerDiv.className = "card mx-auto";
+    videoContainerDiv.style = "width: fit-content; border: 0;";
 
     // Create the video element
     var videoElement = document.createElement("video");
@@ -27,7 +28,7 @@ function loadVideo() {
     videoContainerDiv.appendChild(videoElement);
 
     // Append the video_container div to the container div
-    containerDiv.appendChild(videoContainerDiv);
+    mainColumnDiv.appendChild(videoContainerDiv);
     videoElement.addEventListener('timeupdate', function() {
         timeSliderHandler.call({ currentTime: this.currentTime }, 'video');
     });
@@ -39,7 +40,11 @@ function createTimeSlider() {
     var max = videoData.duration;
     var selectedTime = videoData.clips[1]['start_time'];
 
-    // Create the container div
+    // Create the card div
+    var cardDiv = document.createElement('div');
+    cardDiv.setAttribute('class', 'card-body text-center');
+
+    // Create the slider div
     var sliderContainer = document.createElement('div');
     sliderContainer.setAttribute('id', 'time_slider');
     sliderContainer.setAttribute('class', 'container');
@@ -56,14 +61,15 @@ function createTimeSlider() {
 
     // Append the elements to the container
     sliderContainer.appendChild(inputElement);
-
-    // Get the container div
-    var mainContainer = document.getElementById('container');
+    cardDiv.appendChild(sliderContainer);
 
     loadVideo(); // load video above slider
-
+    
+    // Get the container div
+    var videoContainer = document.getElementById('video_container');
+    
     // Append the container to the main time slider container
-    mainContainer.appendChild(sliderContainer);
+    videoContainer.appendChild(cardDiv);
     
     setHrData(selectedTime);
     setSleepData(selectedTime);
@@ -183,10 +189,11 @@ function convertToSeconds(timeString) {
 function noVideoMessage() {
     var errorMessage = document.createElement('h1');
     errorMessage.setAttribute('id', 'no_data_message');
+    errorMessage.setAttribute('class', 'card text-center mx-auto');
     errorMessage.textContent = 'Video does not exist!';
 
     // Get the container div and append
-    var mainContainer = document.getElementById('container');
+    var mainContainer = document.getElementById('main_column');
     mainContainer.appendChild(errorMessage);
 }
 

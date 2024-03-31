@@ -20,19 +20,27 @@ h2 {
     box-shadow: 0 1rem 3rem rgba(0,0,0,.6);
 }
 
-#side-column {
+#no_data_message {
+    margin: 138px auto;
+    padding: 1rem;
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.6);
+    width: 50%;
+}
+
+#main_column {
+    min-height: 690px;
+}
+
+#side_column {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background: linear-gradient(180deg, rgba(33,37,41,1) 0%, rgba(26,71,116,1) 50%, rgba(33,37,41,1) 100%);
 }
 
 .card {
     box-shadow: 0 1rem 3rem rgba(0,0,0,.6);
-}
-
-#side-column {
-    background: linear-gradient(180deg, rgba(33,37,41,1) 0%, rgba(26,71,116,1) 50%, rgba(33,37,41,1) 100%);
 }
 
 .form-range::-webkit-slider-thumb {

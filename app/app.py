@@ -22,6 +22,7 @@ def dashboard():
     hr_data = False
     sleep_data = False
     temp_data = False
+    humidity_data = False
     requested_date = request.args.get('date')
 
     if not requested_date:

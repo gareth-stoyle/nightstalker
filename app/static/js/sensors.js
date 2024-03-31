@@ -4,7 +4,7 @@ function setTempData(time) {
     // Convert time to unix timestamp
     var unixTime = getUnixTime(requestedDate, time, plusOne=false);
     var unixTimePlusOne = getUnixTime(requestedDate, time, plusOne=true);
-    console.log("Searching for temp data that matches " + Math.floor(unixTime / 100) + " or " + Math.floor(unixTimePlusOne / 100));
+
     // Check if the container already exists
     var existingTempDataContainer = document.getElementById('temp_data');
     
@@ -14,11 +14,17 @@ function setTempData(time) {
     }
 
     // Create the container div
-    var TempDataContainer = document.createElement('div');
-    TempDataContainer.setAttribute('class', 'container');
-    TempDataContainer.setAttribute('id', 'temp_data');
+    var tempDataContainer = document.createElement('div');
+    tempDataContainer.setAttribute('class', 'card mb-4 mx-auto');
+    tempDataContainer.setAttribute('id', 'temp_data');
+    tempDataContainer.setAttribute('style', 'width: 50%;');
 
-    // Create the h4 element for heart rate
+
+    // Create the card div
+    var tempDataContainerCard = document.createElement('div');
+    tempDataContainerCard.setAttribute('class', 'card-body text-center');
+
+    // Create the h4 element for temp
     var tempElement = document.createElement('h4');
     tempElement.setAttribute('id', 'temp');
     
@@ -34,22 +40,23 @@ function setTempData(time) {
     }
 
     if (selectedTemp) {
-        tempElement.textContent = 'Temp: ' + selectedTemp;
+        tempElement.textContent = '🌡 ' + selectedTemp + '°C';
     } else {
-        tempElement.textContent = 'Temp: Not Found'; // Handle the case when no data is found
+        tempElement.textContent = '🌡 Not Found'; // Handle the case when no data is found
     }
 
     // Get the container div and append
-    var mainContainer = document.getElementById('container');
-    TempDataContainer.appendChild(tempElement);
-    mainContainer.appendChild(TempDataContainer);
+    var mainContainer = document.getElementById('side_column');
+    tempDataContainerCard.appendChild(tempElement);
+    tempDataContainer.appendChild(tempDataContainerCard);
+    mainContainer.appendChild(tempDataContainer);
 }
 
 function setHumidityData(time) {
     // Convert time to unix timestamp
     var unixTime = getUnixTime(requestedDate, time, plusOne=false);
     var unixTimePlusOne = getUnixTime(requestedDate, time, plusOne=true);
-    console.log("Searching for humidity data that matches " + Math.floor(unixTime / 100) + " or " + Math.floor(unixTimePlusOne / 100));
+
     // Check if the container already exists
     var existingHumidityDataContainer = document.getElementById('humidity_data');
     
@@ -59,11 +66,16 @@ function setHumidityData(time) {
     }
 
     // Create the container div
-    var HumidityDataContainer = document.createElement('div');
-    HumidityDataContainer.setAttribute('class', 'container');
-    HumidityDataContainer.setAttribute('id', 'humidity_data');
+    var humidityDataContainer = document.createElement('div');
+    humidityDataContainer.setAttribute('class', 'card mb-4 mx-auto');
+    humidityDataContainer.setAttribute('id', 'humidity_data');
+    humidityDataContainer.setAttribute('style', 'width: 50%;');
 
-    // Create the h4 element for heart rate
+    // Create the card div
+    var humidityDataContainerCard = document.createElement('div');
+    humidityDataContainerCard.setAttribute('class', 'card-body text-center');
+
+    // Create the h4 element for humidity
     var humidityElement = document.createElement('h4');
     humidityElement.setAttribute('id', 'humidity');
     
@@ -79,15 +91,16 @@ function setHumidityData(time) {
     }
 
     if (selectedHumidity) {
-        humidityElement.textContent = 'Humidity: ' + selectedHumidity;
+        humidityElement.textContent = '💧 ' + selectedHumidity + '%';
     } else {
-        humidityElement.textContent = 'Humidity: Not Found'; // Handle the case when no data is found
+        humidityElement.textContent = '💧 Not Found'; // Handle the case when no data is found
     }
 
     // Get the container div and append
-    var mainContainer = document.getElementById('container');
-    HumidityDataContainer.appendChild(humidityElement);
-    mainContainer.appendChild(HumidityDataContainer);
+    var mainContainer = document.getElementById('side_column');
+    humidityDataContainerCard.appendChild(humidityElement);
+    humidityDataContainer.appendChild(humidityDataContainerCard);
+    mainContainer.appendChild(humidityDataContainer);
 }
 
 function getUnixTime(requestedDate, timeString, plusOne=false) {
