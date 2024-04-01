@@ -44,8 +44,6 @@ def dashboard():
 
     video_filename = video_processing.find_video(requested_date)
     
-    print(type(video_data))
-
     return render_template("dashboard.html", 
                            hr_data=hr_data, 
                            sleep_data=sleep_data,

@@ -82,14 +82,12 @@ def get_hr_data(date, time_range_spans_multi, time_range=['00:00:00', '23:59:59'
         # request across two dates
         # reduce one from date 
         date_plus_1 = (datetime.strptime(date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d') 
-        # print('requesting hr data for two days:', date, date_plus_1) 
         hr_request = requests.get(
             f'https://api.fitbit.com/1/user/{config.user_id}/activities/heart/date/{date}/{date_plus_1}/1min/time/{time_range[0]}/{time_range[1]}.json',
             headers={'Authorization': 'Bearer ' + config.access_token}
         )
     else:
         # request across one day
-        # print('requesting hr data for one day:', date)
         hr_request = requests.get(
             f'https://api.fitbit.com/1/user/{config.user_id}/activities/heart/date/{date}/1d/1min/time/{time_range[0]}/{time_range[1]}.json',
             headers={'Authorization': 'Bearer ' + config.access_token}
@@ -99,7 +97,6 @@ def get_hr_data(date, time_range_spans_multi, time_range=['00:00:00', '23:59:59'
         raise RuntimeError('fitbit api returned request status code:', hr_request.status_code)
 
     hr_data = hr_request.json()['activities-heart-intraday']['dataset']
-    # print(hr_data)
     return hr_data
 
 def get_sleep_data(date, time_range_spans_multi):
@@ -108,12 +105,10 @@ def get_sleep_data(date, time_range_spans_multi):
         # request across two dates
         # add one to date because fitbit considers date of sleep based on endTime
         date_plus_1 = (datetime.strptime(date, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d') 
-        # print('requesting sleep data for:', date_plus_1)
         sleep_request = requests.get('https://api.fitbit.com/1.2/user/'+config.user_id+f'/sleep/date/{date_plus_1}.json',
                                     headers={'Authorization': 'Bearer ' + config.access_token})
     else:
         # if timespan spans one day, just give for the date requested.
-        # print('requesting sleep data for:', date)
         sleep_request = requests.get('https://api.fitbit.com/1.2/user/'+config.user_id+f'/sleep/date/{date}.json',
                                     headers={'Authorization': 'Bearer ' + config.access_token})
         
@@ -123,5 +118,4 @@ def get_sleep_data(date, time_range_spans_multi):
     
     sleep_data = sleep_request.json()
     sleep_data = format_sleep_data(sleep_data)
-    # print(sleep_data)
     return sleep_data

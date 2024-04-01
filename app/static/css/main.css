@@ -11,8 +11,12 @@ footer {
     background: #2b353e;
 }
 
+footer p {
+    margin: 0;
+}
+
 nav h2 {
-    font-family: Copperplate, Arial, Helvetica;
+    font-family: Arial, Helvetica;
     padding-top: 5px;
     padding-top: 5px;
 }
@@ -50,7 +54,7 @@ nav h2 {
 }
 
 #main_column {
-    min-height: 690px;
+    min-height: 706px;
 }
 
 #side_column {

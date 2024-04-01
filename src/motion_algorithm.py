@@ -131,7 +131,7 @@ def detect_motion(frame, min_area, delta_thresh, avg):
         # compute the bounding box for the contour, draw it on the frame,
         # and update the text
         (x, y, w, h) = cv2.boundingRect(c)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 3)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (27, 98, 168), 3)
         detected = True
         
     return (detected, avg)

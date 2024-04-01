@@ -24,7 +24,7 @@ clips_output_path = path + '/' + f'{current_date}_footage.mp4'
 #
 
 framerate = 8
-resolution = '640x360'
+resolution = '720x480'
 camera = camera.Camera(framerate, resolution, flip=False)
 
 #
