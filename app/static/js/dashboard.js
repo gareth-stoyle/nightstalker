@@ -63,6 +63,8 @@ function createTimeSlider() {
     sliderContainer.appendChild(inputElement);
     cardDiv.appendChild(sliderContainer);
 
+    updateTimeDisplay(selectedTime);
+
     loadVideo(); // load video above slider
     
     // Get the container div
@@ -90,11 +92,40 @@ function timeSliderHandler(source) {
         seekVideo(currentSeconds);
     }
 
+    updateTimeDisplay(selectedTime);
+
     // if there is no data, these divs can stay on Not Found
     if (hrData.length > 0) {setHrData(selectedTime);}
     if (sleepData.sleep.length > 0) {setSleepData(selectedTime);}
     if (tempData) {setTempData(selectedTime);}
     if (humidityData) {setHumidityData(selectedTime);}
+}
+
+function updateTimeDisplay(time) {
+    var mainColumnDiv = document.getElementById("main_column");
+
+    // Check if the container already exists
+    var existingTimeContainer = document.getElementById('selected_time');
+    
+    // If it exists, then remove existing container
+    if (existingTimeContainer) {
+        existingTimeContainer.textContent = time;
+        return
+    }
+
+    // Create the card div for selected time
+    var timeCardDiv = document.createElement('div');
+    timeCardDiv.setAttribute('class', 'card text-center text-white');
+    timeCardDiv.setAttribute('id', 'selected_time_card');
+
+    // Create the paragraph element for selected time
+    var selectedTimeHeader = document.createElement('h2');
+    selectedTimeHeader.setAttribute('id', 'selected_time');
+    selectedTimeHeader.textContent = time;
+
+    // Append the elements to the container
+    timeCardDiv.appendChild(selectedTimeHeader);
+    mainColumnDiv.appendChild(timeCardDiv);
 }
 
 function seekVideo(seconds) {
