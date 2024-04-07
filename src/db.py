@@ -4,26 +4,22 @@ sensor_db = 'databases/sensors.json'
 video_db = 'databases/videos.json'
 
 def insert_video_entry(date, start_time, end_time):
-    # Load existing entries or create an empty dictionary if the file doesn't exist
     try:
         with open(video_db, 'r') as f:
             entries = json.load(f)
     except FileNotFoundError:
         entries = {}
 
-    # Check if the date already exists
     if date in entries:
         print(f"Entry for {date} already exists.")
         return False
 
-    # Add new entry
     entries[date] = {
         'start_time': start_time,
         'end_time': end_time,
         'clips': {}
     }
 
-    # Write the updated entries back to the file
     with open(video_db, 'w') as f:
         json.dump(entries, f, indent=4)
 

@@ -40,18 +40,15 @@ print(f"Recording video to {video_file} in the path: {path}.\nPress 'q' and Ente
 # Sensor logging
 #
 
-motion_sensor = sensors.MotionSensor(motion_pin=22) # probably not necessary, will likely remove
 dht_sensor = sensors.DHTSensor(dht_pin=18)
 
 try:
     dht_sensor.start_recording()
-    motion_sensor.start_recording()
 except Exception as e:
     print(e)
 
 #
 # Handle end of recording/logging.
-# This includes performing motion detection
 #
 
 try:
@@ -64,7 +61,6 @@ except Exception as e:
 finally:
     print('Ending sensor logging...')
     dht_sensor.stop_recording()
-    motion_sensor.stop_recording()
 
     print('Ending recording sessions...')
     camera.stop_recording()

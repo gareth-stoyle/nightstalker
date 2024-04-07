@@ -1,7 +1,6 @@
 import sys
 import os
-import json
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime, timedelta
 # to allow for importing of files from ../src
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -56,11 +55,10 @@ def dashboard():
                            video_data=video_data,
                            video_filename=video_filename)
 
-	
+
 @app.route('/display/<filename>')
 def display_video(filename):
 	return redirect(url_for('static', filename='videos/' + filename), code=301)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
