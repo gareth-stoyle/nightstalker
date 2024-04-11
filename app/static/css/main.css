@@ -28,8 +28,13 @@ nav h2 {
 
 #video_container {
     margin: auto;
-    margin-top: 3.5rem;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
     box-shadow: 0 1rem 3rem rgba(0,0,0,.6);
+}
+
+#my_video {
+    padding: 0;
 }
 
 #selected_time_card {
@@ -37,7 +42,8 @@ nav h2 {
     width: fit-content;
     min-width: 10rem;
     margin: auto;
-    margin-top: 3.5rem;
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
     box-shadow: 0 1rem 3rem rgba(0,0,0,.6);
     background: linear-gradient(150deg, rgba(43,53,62,1) 0%, rgba(27,98,168,1) 100%);
 }
@@ -63,7 +69,7 @@ nav h2 {
     justify-content: center;
     align-items: center;
     background: linear-gradient(180deg, rgba(43,53,62,1) 0%, rgba(27,98,168,1) 50%, rgba(43,53,62,1) 100%);
-
+    padding: 0;
 }
 
 .card {
@@ -84,4 +90,14 @@ nav h2 {
 
 .inset-shadow {
     box-shadow: inset 0 0 15px #000000;
+}
+
+@media screen and (max-width: 800px) {
+    #side_column {
+        padding-top: 10vw;
+    }
+
+    #main_column {
+        min-height: 0;
+    }
 }

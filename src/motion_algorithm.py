@@ -7,6 +7,7 @@ import math
 import video_processing
 import db
 
+database = db.DB()
 
 def trim_video_by_motion(video_path, output_path, date, start_time):
     '''
@@ -39,9 +40,6 @@ def trim_video_by_motion(video_path, output_path, date, start_time):
             if not writing_clip and motion_length < config['min_motion_frames']:
                 continue
             
-            # we know we are going to write this frame
-            frame = add_timestamp(frame, start_time, config['fps'], i, config['font'], config['font_scale'], config['font_color'], config['font_thickness'])
-
             if writing_clip:
                 output_video.write(frame)  # Write the frame to the output video
             else: # lets start writing
@@ -62,10 +60,9 @@ def trim_video_by_motion(video_path, output_path, date, start_time):
                 video_processing.trim_video(input_clip_path, trimmed_clip_path, config['frames_to_shave'] / config['fps'])
                 ready_clips.append(trimmed_clip_path)
                 clip_end_time = calculate_timestamp(start_time, config['fps'], i-config['frames_to_shave'])
-                db.insert_clip_entry(date, clip_count, clip_start_time, clip_end_time)
+                database.insert_clip_entry(date, clip_count, clip_start_time, clip_end_time)
                 writing_clip = False
             elif writing_clip: # continue writing
-                frame = add_timestamp(frame, start_time, config['fps'], i, config['font'], config['font_scale'], config['font_color'], config['font_thickness'])
                 output_video.write(frame)  # Write the frame to the output video
         
     # end writing in case last frame was being written
@@ -76,7 +73,7 @@ def trim_video_by_motion(video_path, output_path, date, start_time):
         video_processing.trim_video(input_clip_path, trimmed_clip_path, 1)
         ready_clips.append(trimmed_clip_path)
         clip_end_time = calculate_timestamp(start_time, config['fps'], i - config['fps'])
-        db.insert_clip_entry(date, clip_count, clip_start_time, clip_end_time)
+        database.insert_clip_entry(date, clip_count, clip_start_time, clip_end_time)
 
     try:
         merge_video_clips(ready_clips, output_path)
@@ -85,7 +82,7 @@ def trim_video_by_motion(video_path, output_path, date, start_time):
         return False
     
     clip_duration = get_video_duration(output_path)
-    db.insert_video_duration(date, clip_duration)
+    database.insert_video_duration(date, clip_duration)
     
     return True
 
@@ -131,17 +128,10 @@ def detect_motion(frame, min_area, delta_thresh, avg):
         # compute the bounding box for the contour, draw it on the frame,
         # and update the text
         (x, y, w, h) = cv2.boundingRect(c)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (27, 98, 168), 3)
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (168, 98, 27), 3)
         detected = True
         
     return (detected, avg)
-
-def add_timestamp(frame, start_time, fps, frame_number, font, font_scale, font_color, font_thickness):
-    ts = calculate_timestamp(start_time, fps, frame_number)
-    text_size = cv2.getTextSize(ts, font, font_scale, font_thickness)[0]
-    text_position = (10, text_size[1] + 10)
-    cv2.putText(frame, ts, text_position, font, font_scale, font_color, font_thickness)
-    return frame
 
 def get_video_duration(video_path):
     cap = cv2.VideoCapture(video_path)
@@ -155,7 +145,7 @@ def get_video_duration(video_path):
     duration_sec = total_frames / fps
     cap.release()
 
-    return duration_sec
+    return int(duration_sec)
 
 def calculate_timestamp(start_time, fps, frame_number):
     '''Calculate the timestamp to put on a frame'''

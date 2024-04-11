@@ -17,7 +17,7 @@ function loadVideo() {
     // Create the video element
     var videoElement = document.createElement("video");
     videoElement.id = "my_video";
-    videoElement.class = "container";
+    videoElement.className = "container embed-responsive embed-responsive-16by9";
     videoElement.autoplay = "autoplay";
     videoElement.preload = "preload";
 

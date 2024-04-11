@@ -12,6 +12,7 @@ import time
 # get file and path details
 #
 
+database = db.DB()
 current_date = datetime.datetime.now().strftime("%Y-%m-%d")
 current_directory = os.getcwd()
 path = os.path.abspath(os.path.join(current_directory, 'app', 'static', 'videos'))
@@ -71,7 +72,7 @@ finally:
     # Delete h264
     if conversion_status:
         video_processing.delete_file(full_video_path)
-    db.insert_video_entry(current_date, start_time, end_time)
+    database.insert_video_entry(current_date, start_time, end_time)
     print(f'Recording successfully captured in {mp4_path}')
 
     print('Getting motion detected clips')

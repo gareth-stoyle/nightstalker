@@ -10,6 +10,7 @@ import fitbit
 import video_processing
 import db
 
+database = db.DB()
 app = Flask(__name__)
 
 
@@ -31,15 +32,15 @@ def dashboard():
         invalid_date = True
         requested_date = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
 
-    video_data = db.retrieve_video(requested_date)
+    video_data = database.retrieve_video(requested_date)
 
     if video_data:
         time_range = [video_data['start_time'], video_data['end_time']]
         time_range_spans_multi = fitbit.time_range_spans_multidays(time_range)
         hr_data = fitbit.get_hr_data(requested_date, time_range_spans_multi, time_range)
         sleep_data = fitbit.get_sleep_data(requested_date, time_range_spans_multi)
-        temp_data = db.retrieve_sensor_entries(requested_date, 'temperature')
-        humidity_data = db.retrieve_sensor_entries(requested_date, 'humidity')
+        temp_data = database.retrieve_sensor_entries(requested_date, 'temperature')
+        humidity_data = database.retrieve_sensor_entries(requested_date, 'humidity')
 
     video_filename = video_processing.find_video(requested_date)
     

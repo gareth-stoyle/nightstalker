@@ -9,11 +9,12 @@ import threading
 GPIO.setmode(GPIO.BCM)
                
 class DHTSensor:
-    def __init__(self, dht_pin):
+    def __init__(self, dht_pin, database='databases/sensors.json'):
         self.dht_sensor = DHT.DHT11
         self.dht_pin = dht_pin
         self.reading_cadence = 1
         self.log_cadence = self.reading_cadence * 60
+        self.database = db.DB(sensor_db=database)
     
     def get_status(self):
         status = DHT.read(self.dht_sensor, self.dht_pin)
@@ -30,6 +31,7 @@ class DHTSensor:
             start_time = time.time()  # Record start time
             counter += 1
             humidity, temp = self.get_status()
+
             if humidity and temp:
                 humidity_readings.append(humidity)
                 temp_readings.append(temp)
@@ -44,8 +46,8 @@ class DHTSensor:
                 try:
                     humidity_avg = int(statistics.fmean(humidity_readings))
                     temp_avg = int(statistics.fmean(temp_readings))
-                    db.insert_sensor_entry(start_date, 'temperature', log_time, temp_avg)
-                    db.insert_sensor_entry(start_date, 'humidity', log_time, humidity_avg)
+                    self.database.insert_sensor_entry(start_date, 'temperature', log_time, temp_avg)
+                    self.database.insert_sensor_entry(start_date, 'humidity', log_time, humidity_avg)
                 except Exception as e:
                     print(e)
                 humidity_readings = []

@@ -1,39 +1,31 @@
 import unittest
-from sensors import DHTSensor
 import threading
-import Adafruit_DHT as DHT # DHT11 sensor
+import time
+import Adafruit_DHT as DHT
 
+from sensors import DHTSensor
 
-# Set pin for testing (replace with actual pin)
-DHT_PIN = 4
+TEST_DHT_PIN = 18
 
 class TestDHTSensor(unittest.TestCase):
+	def setUp(self):
+		self.sensor = DHTSensor(TEST_DHT_PIN, database='/home/gareth/Desktop/nightstalker/tests/test_sensors.json')
+		
+	def test_init(self):
+		self.assertEqual(self.sensor.dht_sensor, DHT.DHT11)
+		self.assertEqual(self.sensor.dht_pin, TEST_DHT_PIN)
+		self.assertEqual(self.sensor.reading_cadence, 1)
+		self.assertEqual(self.sensor.log_cadence, 60)
 
-  # Test initialization
-  def test_init(self):
-    sensor = DHTSensor(DHT_PIN)
-    self.assertEqual(sensor.dht_sensor, DHT.DHT11)
-    self.assertEqual(sensor.dht_pin, DHT_PIN)
-    self.assertEqual(sensor.reading_cadence, 1)
-    self.assertEqual(sensor.log_cadence, 60)
-
-  # Test record_data with successful readings and logging (requires actual sensor)
-  def test_record_data_success(self):
-    sensor = DHTSensor(DHT_PIN)
-    sensor.start_recording()  # Run in main thread for testing
-    sensor.stop_recording()  # Ensure recording stops after test
-
-  # Test start_recording and stop_recording
-  def test_start_stop_recording(self):
-    sensor = DHTSensor(DHT_PIN)
-    sensor.start_recording()
-    self.assertTrue(sensor.recording)
-    self.assertIsInstance(sensor.thread, threading.Thread)
-
-    sensor.stop_recording()
-    self.assertFalse(sensor.recording)
-    self.assertIsNone(sensor.thread)  # Thread should join
+	def test_start_stop_recording(self):
+		self.sensor.start_recording()
+		self.assertTrue(self.sensor.recording)
+		self.assertIsInstance(self.sensor.thread, threading.Thread)
+		time.sleep(1)
+		self.sensor.stop_recording()
+		self.assertFalse(self.sensor.recording)
+		self.assertFalse(self.sensor.thread.is_alive())
 
 
 if __name__ == '__main__':
-  unittest.main
+	unittest.main

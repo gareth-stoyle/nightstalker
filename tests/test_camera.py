@@ -19,9 +19,9 @@ class TestCamera(unittest.TestCase):
 
     def test_camera_initialisation(self):
         self.assertEqual(self.camera.camera.framerate, 10)
-        self.assertNotEqual(self.camera.camera.framerate, 20)  # Assuming 20 is not the expected framerate
+        self.assertNotEqual(self.camera.camera.framerate, 20)
         self.assertEqual(self.camera.camera.resolution, (640, 480))
-        self.assertNotEqual(self.camera.camera.resolution, (1920, 1080))  # Assuming 1920x1080 is not the expected resolution
+        self.assertNotEqual(self.camera.camera.resolution, (1920, 1080))
         self.assertEqual(self.camera.bitrate, 500000)
         self.assertNotEqual(self.camera.bitrate, 1000000)
         self.assertEqual(self.camera.quality, 40)
